@@ -18,7 +18,7 @@ def main():
     print('Disconnecting any connected UART devices...')
     UART.disconnect_devices()
 
-    # Scan for UART devices.
+    # Scan for UART devices
     print('Searching for UART device...')
     try:
         adapter.start_scan()
