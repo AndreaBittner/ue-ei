@@ -72,6 +72,12 @@ void initSensors()
     /* There was a problem detecting the LSM303 ... check your connections */
     Serial.println(F("Ooops, no LSM303 detected ... Check your wiring!"));
     while(1);
+  }  
+  if(!mag.begin())
+  {
+    /* There was a problem detecting the LSM303 ... check your connections */
+    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
+    while(1);
   }
 }
 
@@ -135,40 +141,41 @@ void setup(void)
 void loop(void)
 {
   sensors_event_t accel_event;
-//  sensors_event_t mag_event;
+  sensors_event_t mag_event;
   sensors_vec_t   orientation;
 
   /* Calculate pitch and roll from the raw accelerometer data */
   accel.getEvent(&accel_event);
   if (dof.accelGetOrientation(&accel_event, &orientation))
   {
+
     
    /* OUTPUT FORMAT BLE 
-    {[time: xxx, data: {
-          orient: {
-            roll: #, pitch: #
-            },
-          accel: {
-            x: #, y:#, z:#
-           } 
-        }      
-      ],...}
+    {[time, roll, pitch, yaw, (accel) x, y z],..}
     */
    
     ble.print("AT+BLEUARTTX=");
-    ble.print("[time: ");
+    ble.print("[");
     ble.print(millis());
-    ble.print(", data: { orient: {roll:");
+    ble.print(",");
     ble.print(orientation.roll);
-    ble.print(", pitch: ");
+    ble.print(",");
     ble.print(orientation.pitch);
-    ble.print("}, accel: { x: ");    
+    ble.print(",");
+    
+    /* Calculate the heading using the magnetometer */
+    mag.getEvent(&mag_event);
+    if (dof.magGetOrientation(SENSOR_AXIS_Z, &mag_event, &orientation)){
+        ble.print(orientation.heading);
+        ble.print(",");  
+    }
+      
     ble.print(accel_event.acceleration.x);
-    ble.print(", y: ");
+    ble.print(", ");
     ble.print(accel_event.acceleration.y);
-    ble.print(", z: ");
+    ble.print(", ");
     ble.print(accel_event.acceleration.z);
-    ble.println("}}], ");
+    ble.println("],");
 
     Serial.print(millis());
     Serial.print(F(", Orientation  Roll: "));
@@ -176,6 +183,8 @@ void loop(void)
     Serial.print(F("; "));
     Serial.print(F("Pitch: "));
     Serial.print(orientation.pitch);
+    Serial.print(F(" Heading: "));
+    Serial.print(orientation.heading);
     Serial.print(F(";    "));
     Serial.print(F("Acceleration [m/s12]  X: ")); 
     Serial.print(accel_event.acceleration.x); Serial.print(";  ");

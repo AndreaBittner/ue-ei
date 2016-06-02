@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # verwendet Python 2.7, da die Adafruit lib nur für 2.7 verfügbar war
 
 import Adafruit_BluefruitLE
