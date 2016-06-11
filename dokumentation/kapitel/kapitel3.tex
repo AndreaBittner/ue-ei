@@ -1,0 +1,37 @@
+\section{Projektdurchführung - noch überarbeiten}
+
+\subsection{Design des instrumentierten Schüttguts}
+Allgemeine Anforderungen an das instrumentierte Schüttgut:
+
+\begin{itemize}
+	\item Möglichst klein (die Mindestgröße wir durch die Größe des Mikrocontrollers und der Sensoren bestimmt)
+	\item Aufnehmen von Bewegungsdaten
+	\item Übertragung von Daten an einen PC
+	\item Betrieben durch interne Batterie
+	\item Optional: Cachen von Daten, bis diese ausgelesen werden 
+\end{itemize}
+
+\subsubsection*{Größe des instrumentierten Schüttguts}
+
+Das instrumentierte Schüttgut soll in eine Kapsel eines Kinder Überraschungseis passen. Dadurch wird die maximale Größe des Schüttguts festgelegt. Die Wahl der Ü-Ei-Kapsel als Hülle für das Schüttgut eignet sich dahingehend gut, dass er einerseits den Mikrocontroller schützt, andererseits sehr einfach zu beschaffen ist und kein Behältnis aufwendig produziert werden muss (zum Beispiel als 3D-Druck).
+
+Maße der Kapsel aus einem Kinder Überraschungsei
+%TODO Bild
+
+\subsubsection{Mikrocontroller}
+
+Der Mikrocontroller ist die Hauptplatine, an der alle anderen Bauteile angeschlossen werden müssen. Ausschlaggebend für die Wahl des Mikrocontrollers ist vor allem die Größe des Bauteils. 
+
+Gewähltes Bauteil: Adafruit Pro Trinket 3V 12MHz
+
+Der Pro Trinket 3V 12MHz von Adafruit besitzt einen leistungsstarken ATmega328-Chip, der auch auf einigen Arduino-Mikrocontrollern verwendet werden. Er besitzt einen Speicher von 28K und einen RAM von 2K. Vorteile sind bei diesem, dass er jedoch mit 18 GPIOs (General Purpose Input Output) und 2 analogen Anschlüssen weitaus mehr Anschlussmöglichkeiten bietet, als beispielsweise der Arduino Pro Mini. Die Maße des Boards sind  38mm x 18mm x 4mm, sodass die Platine ausreichend Platz in der Kapsel haben sollte. Auf dem Trinket ist ein USB Bootloader vorinstalliert, sodass der Mikrocontroller per USB programmiert werden kann. (Quelle: https://www.adafruit.com/products/2010)
+
+
+%So werden Bilder eingebunden (als pdf, jpg oder png)
+%\begin{figure}[ht]
+%  \centering
+%  \caption{Hier kommen weitere Erklärungen zum Bild}
+% \label{fig:autorname_bild1}
+%\end{figure}
+%
+% Auf diese Abbildung wird dann mit Abb. \ref{fig:autorname_bild1} verwiesen.
