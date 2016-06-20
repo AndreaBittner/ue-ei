@@ -52,9 +52,9 @@ Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
 
 /* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
 /* UNO */
-//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
-//                             BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
-//                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+/*Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
+                             BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
+                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);  */
 
 // A small helper
 void error(const __FlashStringHelper*err) {
@@ -72,13 +72,13 @@ void initSensors()
     /* There was a problem detecting the LSM303 ... check your connections */
     Serial.println(F("Ooops, no LSM303 detected ... Check your wiring!"));
     while(1);
-  }
- /* if(!mag.begin())
-  {*/
-   /*  There was a problem detecting the LSM303 ... check your connections */
-/*    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
+  }  
+  if(!mag.begin())
+  {
+    /* There was a problem detecting the LSM303 ... check your connections */
+    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
     while(1);
-  } */
+  }
 }
 
 /**************************************************************************/
@@ -88,10 +88,7 @@ void setup(void)
 {
   while (!Serial);  // required for Flora & Micro
   delay(500);
-
   Serial.begin(115200);
-  Serial.println(F("Adafruit Bluefruit Command Mode Example"));
-  Serial.println(F("---------------------------------------"));
 
   /* Initialise the module */
   Serial.print(F("Initialising the Bluefruit LE module: "));
@@ -146,27 +143,53 @@ void loop(void)
   sensors_event_t accel_event;
   sensors_event_t mag_event;
   sensors_vec_t   orientation;
-   
-  // Check for user input
-  char inputs[BUFSIZE+1];
 
   /* Calculate pitch and roll from the raw accelerometer data */
   accel.getEvent(&accel_event);
   if (dof.accelGetOrientation(&accel_event, &orientation))
   {
-    ble.print("AT+BLEUARTTX=");
-    ble.print("{R:");
-    ble.print(orientation.roll);
-    ble.print(",P: ");
-    ble.print(orientation.pitch);
-    ble.println("}, ");    
+
     
-    Serial.print(F("Roll: "));
+   /* OUTPUT FORMAT BLE 
+    {[time, roll, pitch, yaw, (accel) x, y z],..}
+    */
+   
+    ble.print("AT+BLEUARTTX=");
+    ble.print("[");
+    ble.print(millis());
+    ble.print(",");
+    ble.print(orientation.roll);
+    ble.print(",");
+    ble.print(orientation.pitch);
+    ble.print(",");
+    
+    /* Calculate the heading using the magnetometer */
+    mag.getEvent(&mag_event);
+    if (dof.magGetOrientation(SENSOR_AXIS_Z, &mag_event, &orientation)){
+        ble.print(orientation.heading);
+        ble.print(",");  
+    }
+      
+    ble.print(accel_event.acceleration.x);
+    ble.print(", ");
+    ble.print(accel_event.acceleration.y);
+    ble.print(", ");
+    ble.print(accel_event.acceleration.z);
+    ble.println("],");
+
+    Serial.print(millis());
+    Serial.print(F(", Orientation  Roll: "));
     Serial.print(orientation.roll);
     Serial.print(F("; "));
     Serial.print(F("Pitch: "));
     Serial.print(orientation.pitch);
-    Serial.print(F("; "));
+    Serial.print(F(" Heading: "));
+    Serial.print(orientation.heading);
+    Serial.print(F(";    "));
+    Serial.print(F("Acceleration [m/s12]  X: ")); 
+    Serial.print(accel_event.acceleration.x); Serial.print(";  ");
+    Serial.print(F("Y: ")); Serial.print(accel_event.acceleration.y); Serial.print(";  ");
+    Serial.print(F("Z: ")); Serial.print(accel_event.acceleration.z); Serial.print(";     ");
   }
 
     // check response status
@@ -174,35 +197,8 @@ void loop(void)
       Serial.println(F("Failed to send?"));
     }
   
-  
   // Some data was found, its in the buffer
   Serial.print(F("[Buffer ble] ")); 
   Serial.println(ble.buffer);
   ble.waitForOK();
-}
-
-/**************************************************************************/
-/*!
-    @brief  Checks for user input (via the Serial Monitor)
-*/
-/**************************************************************************/
-bool getUserInput(char buffer[], uint8_t maxSize)
-{
-  // timeout in 100 milliseconds
-  TimeoutTimer timeout(100);
-
-  memset(buffer, 0, maxSize);
-  while( (!Serial.available()) && !timeout.expired() ) { delay(1); }
-
-  if ( timeout.expired() ) return false;
-
-  delay(2);
-  uint8_t count=0;
-  do
-  {
-    count += Serial.readBytes(buffer+count, maxSize);
-    delay(2);
-  } while( (count < maxSize) && (Serial.available()) );
-
-  return true;
 }
