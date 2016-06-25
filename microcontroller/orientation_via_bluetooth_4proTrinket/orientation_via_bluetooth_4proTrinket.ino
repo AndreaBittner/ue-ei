@@ -136,8 +136,6 @@ void setup(void)
 
 //  Serial.println(F("Adafruit 9 DOF Pitch/Roll/Heading ")); Serial.println("");
   initSensors();
-  ble.print("AT+BLEUARTTX=");
-  ble.println("Nr2");
 }
 
 /**************************************************************************/
@@ -145,6 +143,9 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
+
+ if(ble.isConnected()){
+  delay(60);
   sensors_event_t accel_event;
   sensors_event_t mag_event;
   sensors_vec_t   orientation;
@@ -156,7 +157,7 @@ void loop(void)
   {
    /* OUTPUT FORMAT BLE {[loopnr, time, roll, pitch, yaw, (accel) x, y z],..}  */
     ble.print("AT+BLEUARTTX=");
-    ble.print("[");
+    ble.print("{");
     ble.print(loopnr);
     ble.print(",");
     ble.print(millis());
@@ -174,11 +175,11 @@ void loop(void)
     }
       
     ble.print(accel_event.acceleration.x);
-    ble.print(", ");
+    ble.print(",");
     ble.print(accel_event.acceleration.y);
-    ble.print(", ");
+    ble.print(",");
     ble.print(accel_event.acceleration.z);
-    ble.println("],");
+    ble.println("},");
 
  //   Serial.print(millis());
  //   Serial.print(F(", Orientation  Roll: "));
@@ -203,6 +204,8 @@ void loop(void)
   // Some data was found, its in the buffer
  // Serial.print(F("[Buffer ble] ")); 
  // Serial.println(ble.buffer);
- delay(60);
   ble.waitForOK();
+ } else {
+  delay(1000);
+ }
 }
