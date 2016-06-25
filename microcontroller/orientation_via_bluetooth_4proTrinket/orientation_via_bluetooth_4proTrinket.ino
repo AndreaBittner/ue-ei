@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <SPI.h>
-#if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
-  #include <SoftwareSerial.h>
-#endif
+//#if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined (_VARIANT_ARDUINO_ZERO_)
+//  #include <SoftwareSerial.h>
+//#endif
 
 /* SENSORS */
 #include <Wire.h>
@@ -20,7 +20,7 @@ float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
 /* BLUETOOTH */
 #include "Adafruit_BLE.h"
 #include "Adafruit_BluefruitLE_SPI.h"
-#include "Adafruit_BluefruitLE_UART.h"
+//#include "Adafruit_BluefruitLE_UART.h"
 #include "BluefruitConfig.h"
 
 /*=========================================================================
@@ -58,9 +58,12 @@ Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
 
 // A small helper
 void error(const __FlashStringHelper*err) {
-  Serial.println(err);
+ // Serial.println(err);
   while (1);
 }
+
+// Counter
+int loopnr =0;
 
 /**************************************************************************/
 /* Initialises all the sensors */
@@ -70,13 +73,13 @@ void initSensors()
   if(!accel.begin())
   {
     /* There was a problem detecting the LSM303 ... check your connections */
-    Serial.println(F("Ooops, no LSM303 detected ... Check your wiring!"));
+ //   Serial.println(F("Ooops, no LSM303 detected ... Check your wiring!"));
     while(1);
   }  
   if(!mag.begin())
   {
     /* There was a problem detecting the LSM303 ... check your connections */
-    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
+//    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
     while(1);
   }
 }
@@ -86,22 +89,22 @@ void initSensors()
 /**************************************************************************/
 void setup(void)
 {
-  while (!Serial);  // required for Flora & Micro
-  delay(500);
-  Serial.begin(115200);
+//  while (!Serial);  // required for Flora & Micro
+//  delay(500);
+//  Serial.begin(115200);
 
   /* Initialise the module */
-  Serial.print(F("Initialising the Bluefruit LE module: "));
+ // Serial.print(F("Initialising the Bluefruit LE module: "));
   if ( !ble.begin(VERBOSE_MODE) )
   {
     error(F("Couldn't find Bluefruit, make sure it's in CoMmanD mode & check wiring?"));
   }
-  Serial.println( F("OK!") );
+ // Serial.println( F("OK!") );
 
   if ( FACTORYRESET_ENABLE )
   {
     /* Perform a factory reset to make sure everything is in a known state */
-    Serial.println(F("Performing a factory reset: "));
+//    Serial.println(F("Performing a factory reset: "));
     if ( ! ble.factoryReset() ){
       error(F("Couldn't factory reset"));
     }
@@ -109,10 +112,10 @@ void setup(void)
   /* Disable command echo from Bluefruit */
   ble.echo(false);
 
-  Serial.println("Requesting Bluefruit info:");
+//  Serial.println("Requesting Bluefruit info:");
   ble.info();
-  Serial.println(F("Use Adafruit Bluefruit LE app to connect in UART mode"));
-  Serial.println();
+//  Serial.println(F("Use Adafruit Bluefruit LE app to connect in UART mode"));
+//  Serial.println();
 
   ble.verbose(false);  // debug info 
 
@@ -125,14 +128,16 @@ void setup(void)
   if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )
   {
     // Change Mode LED Activity
-    Serial.println(F("******************************"));
-    Serial.println(F("Change LED activity to " MODE_LED_BEHAVIOUR));
+ //   Serial.println(F("******************************"));
+ //   Serial.println(F("Change LED activity to " MODE_LED_BEHAVIOUR));
     ble.sendCommandCheckOK("AT+HWModeLED=" MODE_LED_BEHAVIOUR);
-    Serial.println(F("******************************"));
+ //   Serial.println(F("******************************"));
   }
 
-  Serial.println(F("Adafruit 9 DOF Pitch/Roll/Heading ")); Serial.println("");
+//  Serial.println(F("Adafruit 9 DOF Pitch/Roll/Heading ")); Serial.println("");
   initSensors();
+  ble.print("AT+BLEUARTTX=");
+  ble.println("Nr2");
 }
 
 /**************************************************************************/
@@ -143,19 +148,17 @@ void loop(void)
   sensors_event_t accel_event;
   sensors_event_t mag_event;
   sensors_vec_t   orientation;
+  loopnr++;
 
   /* Calculate pitch and roll from the raw accelerometer data */
   accel.getEvent(&accel_event);
   if (dof.accelGetOrientation(&accel_event, &orientation))
   {
-
-    
-   /* OUTPUT FORMAT BLE 
-    {[time, roll, pitch, yaw, (accel) x, y z],..}
-    */
-   
+   /* OUTPUT FORMAT BLE {[loopnr, time, roll, pitch, yaw, (accel) x, y z],..}  */
     ble.print("AT+BLEUARTTX=");
     ble.print("[");
+    ble.print(loopnr);
+    ble.print(",");
     ble.print(millis());
     ble.print(",");
     ble.print(orientation.roll);
@@ -177,28 +180,29 @@ void loop(void)
     ble.print(accel_event.acceleration.z);
     ble.println("],");
 
-    Serial.print(millis());
-    Serial.print(F(", Orientation  Roll: "));
-    Serial.print(orientation.roll);
-    Serial.print(F("; "));
-    Serial.print(F("Pitch: "));
-    Serial.print(orientation.pitch);
-    Serial.print(F(" Heading: "));
-    Serial.print(orientation.heading);
-    Serial.print(F(";    "));
-    Serial.print(F("Acceleration [m/s12]  X: ")); 
-    Serial.print(accel_event.acceleration.x); Serial.print(";  ");
-    Serial.print(F("Y: ")); Serial.print(accel_event.acceleration.y); Serial.print(";  ");
-    Serial.print(F("Z: ")); Serial.print(accel_event.acceleration.z); Serial.print(";     ");
+ //   Serial.print(millis());
+ //   Serial.print(F(", Orientation  Roll: "));
+ //   Serial.print(orientation.roll);
+ //   Serial.print(F("; "));
+ //   Serial.print(F("Pitch: "));
+ //   Serial.print(orientation.pitch);
+ //   Serial.print(F(" Heading: "));
+ //   Serial.print(orientation.heading);
+ //   Serial.print(F(";    "));
+ //   Serial.print(F("Acceleration [m/s12]  X: ")); 
+ //   Serial.print(accel_event.acceleration.x); Serial.print(";  ");
+ //   Serial.print(F("Y: ")); Serial.print(accel_event.acceleration.y); Serial.print(";  ");
+ //   Serial.print(F("Z: ")); Serial.print(accel_event.acceleration.z); Serial.print(";     ");
   }
 
     // check response status
-    if (! ble.waitForOK() ) {
-      Serial.println(F("Failed to send?"));
-    }
+ //   if (! ble.waitForOK() ) {
+ //     Serial.println(F("Failed to send?"));
+ //   }
   
   // Some data was found, its in the buffer
-  Serial.print(F("[Buffer ble] ")); 
-  Serial.println(ble.buffer);
+ // Serial.print(F("[Buffer ble] ")); 
+ // Serial.println(ble.buffer);
+ delay(60);
   ble.waitForOK();
 }
