@@ -4,8 +4,10 @@
 import sys
 import functools
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 import pyqtgraph as pg
-from MainWidget import MainWidget
+from Observer import Observer
+from Presenter import Presenter
 from Menu import Menu
 
 
@@ -13,21 +15,30 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
+        self.observer = Observer()
+        self.presenter = Presenter()
+
+        self.central_widget = QtGui.QStackedWidget()
+        self.central_widget.addWidget(self.observer)
+
+        self.menubar = Menu(self)
         self.initialize()
 
     def initialize(self):
-        menubar = Menu()
-        self.mainWidget = MainWidget()
-        self.setMenuBar(menubar)
-        self.setCentralWidget(self.mainWidget)
+        self.setMenuBar(self.menubar)
 
-        self.setGeometry(0, 0, 1000, 600)
-        self.setWindowTitle('Tracker')
+        self.setCentralWidget(self.central_widget)
+
+        self.setGeometry(0, 0, 1000, 500)
+        self.setMinimumWidth(1000)
+        self.setMinimumHeight(500)
+        self.setWindowTitle(u'Schüttgutbeobachter')
         self.show()
 
 
 def update_plot(obj):
-    obj.mainWidget.update_plots()
+    if type(obj.central_widget.currentWidget()) is Observer:
+        obj.central_widget.currentWidget().update_plots()
 
 
 def main():
