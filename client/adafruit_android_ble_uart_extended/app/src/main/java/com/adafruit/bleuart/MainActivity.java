@@ -13,20 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
-
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Thread;
@@ -36,9 +29,15 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
 
     // UI elements
     private TextView messages;
-    private EditText input;
     private Button save;
-    private CheckBox newline;
+    private Button stop;
+    private Button start;
+    private Button reset;
+    private static class  microCommand {
+        public static int START    = 1;
+        public static int STOP     = 2;
+        public static int RESET    = 3;
+    }
 
 
     // Bluetooth LE UART instance.  This is defined in BluetoothLeUart.java.
@@ -50,6 +49,14 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     private GoogleApiClient client;
 
     private StringBuilder output;
+    private Integer receiveCounter;
+
+    private StringBuilder output(){
+        if (output == null)
+            output = new StringBuilder();
+        return output;
+    }
+
 
     // Write some text to the messages text view.
     // Care is taken to do this on the main UI thread so writeLine can be called from any thread
@@ -63,25 +70,18 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
             }
         });
     }
+    private void writeLine(final Integer counter) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                messages.append(counter.toString());
+                messages.append("\n");
+            }
+        });
+    }
 
-    // Handler for mouse click on the save button.
-    public void save(View view) {
-        File sdCard = Environment.getExternalStorageDirectory();
-        File dir = new File(sdCard.getAbsolutePath() + "/Download");
-
-        Date d = new Date();
-        CharSequence s  = DateFormat.format("MMddyy_hhmmss", d.getTime());
-        File file = new File(dir, s.toString() + "_data.txt");
-        FileWriter filewriter;
-
-        try {
-            filewriter = new FileWriter(file);
-            filewriter.write(output().toString());
-            filewriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        writeLine("-- SAVED --");
+    private void sendCommand(int command) {
+        uart.send(command+"");
     }
 
     @Override
@@ -98,6 +98,15 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
         save = (Button) findViewById(R.id.save);
         save.setClickable(false);
         save.setEnabled(false);
+        start = (Button) findViewById(R.id.start);
+        start.setClickable(false);
+        start.setEnabled(false);
+        stop = (Button) findViewById(R.id.stop);
+        stop.setClickable(false);
+        stop.setEnabled(false);
+        reset = (Button) findViewById(R.id.reset);
+        reset.setClickable(true);
+        reset.setEnabled(true);
 
         // Enable auto-scroll in the TextView
         messages.setMovementMethod(new ScrollingMovementMethod());
@@ -118,7 +127,7 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     @Override
     protected void onResume() {
         super.onResume();
-        writeLine("Scanning for devices ...");
+        writeLine("Scanning for devices ...\n");
         uart.registerCallback(this);
         uart.connectFirstAvailable();
     }
@@ -164,6 +173,7 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     public void onConnected(BluetoothLeUart uart) {
         // Called when UART device is connected and ready to receive data.
         writeLine("Connected!\n");
+        receiveCounter = 0;
         // Enable the save button
         runOnUiThread(new Runnable() {
             @Override
@@ -171,26 +181,32 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
                 save = (Button) findViewById(R.id.save);
                 save.setClickable(true);
                 save.setEnabled(true);
+                start = (Button) findViewById(R.id.start);
+                start.setClickable(true);
+                start.setEnabled(true);
+                stop = (Button) findViewById(R.id.stop);
+                stop.setClickable(true);
+                stop.setEnabled(true);
             }
         });
-    }
-
-    private StringBuilder output(){
-        if (output == null)
-            output = new StringBuilder();
-        return output;
     }
 
     @Override
     public void onConnectFailed(BluetoothLeUart uart) {
         // Called when some error occured which prevented UART connection from completing.
-        writeLine("Error connecting to device!");
+        writeLine("Error connecting to device!\n");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 save = (Button) findViewById(R.id.save);
                 save.setClickable(false);
                 save.setEnabled(false);
+                start = (Button) findViewById(R.id.start);
+                start.setClickable(false);
+                start.setEnabled(false);
+                stop = (Button) findViewById(R.id.stop);
+                stop.setClickable(false);
+                stop.setEnabled(false);
             }
         });
     }
@@ -198,14 +214,20 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     @Override
     public void onDisconnected(BluetoothLeUart uart) {
         // Called when the UART device disconnected.
-        writeLine("Disconnected!");
+        writeLine("Disconnected!\n");
         // Disable the save button.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 save = (Button) findViewById(R.id.save);
-                save.setClickable(false);
-                save.setEnabled(false);
+                save.setClickable(true);
+                save.setEnabled(true);
+                start = (Button) findViewById(R.id.start);
+                start.setClickable(false);
+                start.setEnabled(false);
+                stop = (Button) findViewById(R.id.stop);
+                stop.setClickable(false);
+                stop.setEnabled(false);
             }
         });
     }
@@ -213,15 +235,17 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     @Override
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
         // Called when data is received by the UART.
-        writeLine(rx.getStringValue(0));
+        writeLine(receiveCounter.toString());
+        writeLine("\n");
+        receiveCounter++;
         output().append(rx.getStringValue(0));
     }
 
     @Override
     public void onDeviceFound(BluetoothDevice device) {
         // Called when a UART device is discovered (after calling startScan).
-        writeLine("Found device : " + device.getAddress());
-        writeLine("Waiting for a connection ...");
+        writeLine("Found device : " + device.getAddress() + "\n");
+        writeLine("Waiting for a connection ...\n");
     }
 
     @Override
@@ -247,5 +271,63 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
                 Uri.parse("android-app://com.adafruit.bleuart/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    // Handler for mouse click on the save button.
+    public void clickSave(View view) {
+        File sdCard = Environment.getExternalStorageDirectory();
+        File dir = new File(sdCard.getAbsolutePath() + "/Download");
+
+        Date d = new Date();
+        CharSequence s  = DateFormat.format("MMddyy_hhmmss", d.getTime());
+        File file = new File(dir, s.toString() + "_data.txt");
+        FileWriter filewriter;
+
+        try {
+            filewriter = new FileWriter(file);
+            filewriter.write(output().toString());
+            filewriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        writeLine("\n-- SAVED --\n");
+    }
+    public void clickStart(View view){
+        receiveCounter = 0;
+        output().setLength(0);
+        sendCommand(microCommand.START);
+        writeLine("\n-- START --\n");
+    }
+
+    public void clickStop(View view) {
+        //Werte in App lassen, Stringbuffer beibehalten, Speichern als File noch möglich
+        //Stoppt nur Werte Senden des Mikrocontrollers
+        sendCommand(microCommand.STOP);
+        writeLine("\n-- STOP -- Click SAVE to save data now\n");
+    }
+
+    public void clickReset(View view) {
+        sendCommand(microCommand.RESET);
+        receiveCounter = 0;
+        output().setLength(0);
+        messages.clearComposingText();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                save = (Button) findViewById(R.id.save);
+                save.setClickable(false);
+                save.setEnabled(false);
+                start = (Button) findViewById(R.id.start);
+                start.setClickable(false);
+                start.setEnabled(false);
+                stop = (Button) findViewById(R.id.stop);
+                stop.setClickable(false);
+                stop.setEnabled(false);
+            }
+        });
+        writeLine("-- Wait for Reset ... --\n");
+        onResume();
+
+
     }
 }

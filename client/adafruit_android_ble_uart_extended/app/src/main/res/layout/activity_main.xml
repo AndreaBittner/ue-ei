@@ -9,26 +9,56 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:onClick="clickReset"
+        android:nestedScrollingEnabled="false" />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:onClick="clickStop"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/reset" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:onClick="clickStart"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/save" />
+
+    <Button
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:text="Save"
-        android:onClick="save" />
+        android:onClick="clickSave"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/messages"
+        android:nestedScrollingEnabled="true" />
 
     <TextView
         android:id="@+id/messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/save"
         android:layout_above="@+id/newline"
         android:fontFamily="monospace"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:scrollbars="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:gravity="bottom"/>
+        android:gravity="bottom"
+        android:layout_below="@+id/reset"
+        android:layout_toEndOf="@+id/stop"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
