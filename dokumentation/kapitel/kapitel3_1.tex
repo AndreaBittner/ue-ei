@@ -1,4 +1,4 @@
-\section{Arbeitsschritte - noch überarbeiten}
+{\large \section{Arbeitsschritte - noch überarbeiten}
 
 %TODO Zwar so schon Parts aus Google Doc, aber Aufteilung nochmal geändert
 
@@ -11,30 +11,66 @@
 Allgemeine Anforderungen an das instrumentierte Schüttgut:
 
 \begin{itemize}
-	\item Möglichst klein (die Mindestgröße wir durch die Größe des Mikrocontrollers und der Sensoren bestimmt)
-	\item Aufnehmen von Bewegungsdaten
+	\item Möglichst klein %TODO Anmerkung 1
+	\item Aufnehmen/Speichern von Bewegungsdaten
 	\item Übertragung von Daten an einen PC
 	\item Betrieben durch interne Batterie
 	\item Optional: Cachen von Daten, bis diese ausgelesen werden 
 \end{itemize}
 
-\subsubsection*{Machbarkeitsstudie}
-
-\subsubsection*{Schaltplan und Löten}
-
-
-
-\subsubsection*{Größe des instrumentierten Schüttguts}
-
-Das instrumentierte Schüttgut soll in eine Kapsel eines Kinder Überraschungseis passen. Dadurch wird die maximale Größe des Schüttguts festgelegt. Die Wahl der Ü-Ei-Kapsel als Hülle für das Schüttgut eignet sich dahingehend gut, dass er einerseits den Mikrocontroller schützt, andererseits sehr einfach zu beschaffen ist und kein Behältnis aufwendig produziert werden muss (zum Beispiel als 3D-Druck).
+Das instrumentierte Schüttgut soll in eine Kapsel eines Kinder-Überraschungseis passen. Dadurch wird die maximale Größe des Schüttguts festgelegt. Die Wahl der Ü-Ei-Kapsel als Hülle für das Schüttgut eignet sich dahingehend gut, dass es einerseits den Mikrocontroller schützt, andererseits sehr einfach zu beschaffen ist und kein Behältnis aufwendig produziert werden muss (zum Beispiel mittels 3D-Druck).
 
 Maße der Kapsel aus einem Kinder Überraschungsei
 %TODO Bild
 
-\subsubsection*{Mikrocontroller}
+Die Beschaffung der Bauteile sollte zudem möglichst einfach sein. Von Vorteil ist, wenn alle Bauteile von einem deutschen Händler bezogen werden könnten, um einerseits nur einen einzelnen Liefervorgang zu haben und andrerseits eine geringere Lieferzeit (anstatt international).
 
-Der Mikrocontroller ist die Hauptplatine, an der alle anderen Bauteile angeschlossen werden müssen. Ausschlaggebend für die Wahl des Mikrocontrollers ist vor allem die Größe des Bauteils. 
+\subsubsection*{Recherche}
+Begonnen wurde mit einer Recherche, welche Bauteile es gibt, mit denen sich solch ein instrumentiertes Schüttgut erstellen lässt. Als Hauptplatine wird ein Mikrocontroller benötigt, an dem weitere Bauteile angeschlossen werden können. Es gibt einzelne Sensormodule, die z.B.Orientierung und Beschleunigung in je 3 Achsen gleichzeitig messen können. Ebenso gibt es verschiedene Speicher- und Übertragungsmodule, die Daten auf eine SD-Karte loggen oder per Bluetooth / WLAN / ZigBee weiterleiten können. Ausschlaggebend bei der Wahl der einzelnen Module war zunächst die Größe der einzelnen Bauteile, die selbst die Größe eines Ü-Eis nicht übersteigen dürfen. Nach der Wahl eines passenden Mikrocontrollers müssen auch die Anschlussmöglichkeiten für weitere Module mit beachtet werden.
 
+%TODO Large
+Mikrocontroller
 Gewähltes Bauteil: Adafruit Pro Trinket 3V 12MHz
 
 Der Pro Trinket 3V 12MHz von Adafruit besitzt einen leistungsstarken ATmega328-Chip, der auch auf einigen Arduino-Mikrocontrollern verwendet werden. Er besitzt einen Speicher von 28K und einen RAM von 2K. Vorteile sind bei diesem, dass er jedoch mit 18 GPIOs (General Purpose Input Output) und 2 analogen Anschlüssen weitaus mehr Anschlussmöglichkeiten bietet, als beispielsweise der Arduino Pro Mini. Die Maße des Boards sind  38mm x 18mm x 4mm, sodass die Platine ausreichend Platz in der Kapsel haben sollte. Auf dem Trinket ist ein USB Bootloader vorinstalliert, sodass der Mikrocontroller per USB programmiert werden kann. (Quelle: https://www.adafruit.com/products/2010)
+
+Aufnahme von Bewegungsdaten //
+Gewähltes Bauteil: Adafruit 9-DOF IMU Breakout - L3GD20H + LSM303
+
+Das Modul L3GD20H kann drei verschiedene Datentypen in jeweils drei Achsen messen: Beschleunigungsdaten, Rotationsdaten und Magnetische Achsen ähnlich zu einem Kompass. Da Beschleunigungs- und Gyroskopdaten gemessen werden sollen, ist ein Bauteil, dass beide Daten zusammen liefern kann, sehr platzeffizient. Die Kommunikation zwischen dem Mikrocontroller und dem Datensensor benutzt das I2C-Protokoll. Das Bauteil hat die Maße 38mm x 23mm und ist damit um 5 Millimeter breiter als der Mikrocontroller Pro Trinket. (Quelle: https://www.adafruit.com/products/1714)
+
+Übertragung der Daten//
+Zur möglichst unkomplizierten Übertragung von Daten an den PC wird eine drahtlose Verbindung verwendet. Dadurch ergeben sich drei verschiedene mögliche Typen:
+\begin{itemize}  %TODO XBee oder ZigBee?
+	\item ZigBee: Zu Aufwändig, da ein separates Modul für den PC benötigt wird. Hingegen sind fast alle Laptops heute standardmäßig mit WLan und Bluetooth ausgestattet.
+	\item WLAN: Die zur Auswahl stehenden Platinen sind entweder deutlich zu groß, oder in ihrer Verwendung zu heikel, da sie extrem empfindlich auf kleinste Spannungsschwankungen reagieren. Zudem ist der Stromverbrauch größer als bei Bluetooth. Da das Schüttgut nur durch eine sehr kleine Batterie betrieben werden kann, ist dies hinderlich.
+	\item Bluetooth: Bluetooth ist weit verbreitet und die Module sind klein genug, um sie mit im Ü-Ei unterzubringen.
+\end{itemize}
+
+Gewähltes Bauteil: Adafruit Bluefruit LE SPI Friend - Bluetooth Low Energy (BLE)
+
+Gewählt wurde das Adafruit Bluefruit LE SPI Friend, dass durch Bluetooth Low Energy sehr energiearm sein soll. Zur Kommunikation mit dem Mikrocontroller wird das Protokoll SPI benutzt. Mit den Maßen 23mm x 26mm x 5mm ist es dicker als die anderen Bauteile, aufgrund der geringeren Breite sollte sich das Bauteil dennoch in der Rundung des Ü-Eis Platz finden. Das Modul hat außerdem Speicherplatz von 256KB. (Quelle: https://www.adafruit.com/products/2633)
+
+Betrieb durch interne Batterie
+
+Um einen universellen Einsatz des instrumentierten Schüttguts zu garantieren, muss es mit einer eigenen Batterie oder einem eigenen Akkumulator betrieben werden. 
+Gewählte Bauteile: Adafruit Pro Trinket LiIon/LiPoly Backpack Add-On, Lithium Ion Polymer Battery - 3.7v 150mAh
+Mit dem Adafruit Trinket Lilon Backpack Add-On lässt sich ein Akkumulator an das Pro Trinket anschließen. Das Add-On dient als Ladestation, wenn das Pro Trinket per USB mit einem Rechner verbunden ist. Sobald der USB-Port entfernt wird, schaltet das Modul automatisch in den batteriebetriebenen Modus. Das Modul hat eine Größe von 15mm x 17mm x 7mm. Die relativ große Höhe im Vergleich zu den anderen Modulen kommt durch den Anschluss für den Akkumulator zustande. (Quelle: https://www.adafruit.com/products/2124)
+
+Hinzu kommt eine Lithium Ion Polymer Battery mit 3,7V und 150mAh. Dieser Akku wurde aufgrund der geringen Größe von 19,75mm x 26mm x 3,8mm gewählt. Es gibt auch Modelle mit mehr Kapazität, die aber auch andere Abmessungen besitzen. Zum Teil geht die Länge über 30mm hinaus. Es werden allerdings schon Bauteile über diese Länge verwendet, die in der vertikalen Achse der Kapsel platziert werden müssen. Der Akku sollte daher näher an der Aussenwand positioniert werden, wo die Höhe durch die Abrundung der Kapsel jedoch eingeschränkt wird. (Quelle: https://www.adafruit.com/products/1317)
+Cachen der Daten
+
+Alternative Überlegungen
+
+Da die meisten Mikrocontroller nur sehr wenig eigenen Speicher haben und eine drahtlose Datenverbindung nicht zuverlässig genug ist, müssen die vom Sensor gelesenen Daten auf einem extra hinzugefügten Speicher zwischen gespeichert werden, bis sie vom PC ausgelesen werden können.
+Mögliche Bauteile:
+Adafruit I2C Non-Volatile FRAM Breakout - 256Kbit / 32KByte (https://www.adafruit.com/products/1895) 
+Adafruit SPI Non-Volatile FRAM Breakout - 64Kbit / 8KByte (https://www.adafruit.com/products/1897) 
+Vorerst sind diese Bauteile out of scope, da das Bluetooth Modul über 256 KB Speicher verfügt, die eventuell als Cache bzw. Puffer genutzt werden können.
+Mit den gewählten Bauteilen lässt sich der Speicher des Mikrocontrollers von den integrierten 28 KB (schon abzüglich der 4 KB für die Dateien des Bootloaders) auf um 8 bzw. 32  KB erhöhen 
+Die gewählten Bauteile sind alle von der Marke Adafruit. Der Vorteil darin liegt in der Kompatibilität der Bauteile aufgrund der Abstimmung zueinander, sowie in der sehr ausführlichen Dokumentation dieser. 
+
+
+\subsubsection*{Machbarkeitsstudie und Löten}
+% siehe Präsi
+
