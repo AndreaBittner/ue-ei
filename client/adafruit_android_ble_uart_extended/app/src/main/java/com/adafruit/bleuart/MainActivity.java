@@ -3,7 +3,6 @@ package com.adafruit.bleuart;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +21,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.Thread;
 import java.util.Date;
 import android.util.Log;
 
@@ -34,6 +32,8 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     private Button stop;
     private Button start;
     private Button reset;
+    private boolean shouldReconnect = false;
+
     private static class  microCommand {
         public static int START    = 1;
         public static int STOP     = 2;
@@ -50,7 +50,9 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     private GoogleApiClient client;
 
     private StringBuilder output;
-    private Integer receiveCounter;
+    private StringBuilder output_saver;
+    private int oldReceiveCounter;
+    private int receiveCounter;
     // TODO Check
     // is true, after clickStart(), after connection lost, clickStart() shall be started automatically
     private Boolean receivingDataMode = false;
@@ -61,6 +63,12 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
         if (output == null)
             output = new StringBuilder();
         return output;
+    }
+
+    private StringBuilder output_saver(){
+        if (output_saver == null)
+            output_saver = new StringBuilder();
+        return output_saver;
     }
 
     // Write some text to the messages text view.
@@ -133,11 +141,8 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     protected void onResume() {
         super.onResume();
         writeLine("Scanning for devices ...\n");
-        //TODO onResume register Callback again, Check if old one was unregistered
-        // if (CallbackRegistration) {
-        //    uart.disconnect();
-              uart.registerCallback(this);
-        //}
+
+        uart.registerCallback(this);
         uart.connectFirstAvailable();
     }
 
@@ -200,12 +205,18 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
         if (receivingDataMode) {
             clickStart(start);
         }
+
+        shouldReconnect = false;
     }
 
     @Override
     public void onConnectFailed(BluetoothLeUart uart) {
         // Called when some error occured which prevented UART connection from completing.
         writeLine("Error connecting to device!\n");
+        DeactivateButtons();
+    }
+
+    private void DeactivateButtons() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -223,7 +234,7 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     }
 
     @Override
-    public void onDisconnected(BluetoothLeUart uart) {
+    public void onDisconnected(BluetoothLeUart uart2) {
         // Called when the UART device disconnected.
         writeLine("Disconnected!\n");
         // Disable the save button.
@@ -247,8 +258,7 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
         // Called when data is received by the UART.
         if(receiveCounter % 100 == 0) {
-            writeLine(receiveCounter.toString());
-            writeLine("\n");
+            writeLine(receiveCounter);
         }
         receiveCounter++;
         output().append(rx.getStringValue(0));
@@ -289,25 +299,36 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
 
     // Handler for mouse click on the save button.
     public void clickSave(View view) {
+         saveFile();
+    }
+
+    private void saveFile() {
+        StringBuilder temp;
+        temp = output_saver();
+        output_saver = output();
+        output = temp;
+
         File sdCard = Environment.getExternalStorageDirectory();
         File dir = new File(sdCard.getAbsolutePath() + "/Download");
 
         Date d = new Date();
         CharSequence s  = DateFormat.format("MMddyy_hhmmss", d.getTime());
-        File file = new File(dir, s.toString() + "_data.txt");
+        File file = new File(dir, s.toString() + "_data_" + oldReceiveCounter + "-" + receiveCounter + ".txt");
         FileWriter filewriter;
 
         try {
             filewriter = new FileWriter(file);
-            filewriter.write(output().toString());
+            filewriter.write(output_saver().toString());
             filewriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        output_saver.setLength(0);
+        oldReceiveCounter = receiveCounter;
         writeLine("\n-- SAVED --\n");
     }
+
     public void clickStart(View view){
-        receiveCounter = 0;
         receivingDataMode = true;
         output().setLength(0);
         sendCommand(microCommand.START);
@@ -323,30 +344,14 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     }
 
     public void clickReset(View view) {
+        clickSave(view);
         sendCommand(microCommand.RESET);
         receivingDataMode = false;
         receiveCounter = 0;
+        oldReceiveCounter = 0;
         output().setLength(0);
         messages.setText("");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                save = (Button) findViewById(R.id.save);
-                save.setClickable(false);
-                save.setEnabled(false);
-                start = (Button) findViewById(R.id.start);
-                start.setClickable(false);
-                start.setEnabled(false);
-                stop = (Button) findViewById(R.id.stop);
-                stop.setClickable(false);
-                stop.setEnabled(false);
-            }
-        });
-        //TODO Check
-        uart.unregisterCallback(this);
-        CallbackRegistration = false;
-
+        uart.connectFirstAvailable();
         writeLine("-- Wait for Reset ... --\n");
-        onResume();
     }
 }

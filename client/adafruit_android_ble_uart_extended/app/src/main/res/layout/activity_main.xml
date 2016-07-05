@@ -12,7 +12,7 @@
         android:id="@+id/reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reset"
+        android:text="Save &amp; Reset"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:onClick="clickReset"

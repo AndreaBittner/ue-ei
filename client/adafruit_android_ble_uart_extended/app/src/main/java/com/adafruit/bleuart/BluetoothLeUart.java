@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
 
 import java.nio.ByteBuffer;
@@ -14,6 +16,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.lang.String;
@@ -36,6 +40,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
     public static UUID DIS_MODEL_UUID = UUID.fromString("00002a24-0000-1000-8000-00805f9b34fb");
     public static UUID DIS_HWREV_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
     public static UUID DIS_SWREV_UUID = UUID.fromString("00002a28-0000-1000-8000-00805f9b34fb");
+    private final SuperScanCallback superScanCallback;
 
     // Internal UART state.
     private Context context;
@@ -59,12 +64,12 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
 
     // Interface for a BluetoothLeUart client to be notified of UART actions.
     public interface Callback {
-        public void onConnected(BluetoothLeUart uart);
-        public void onConnectFailed(BluetoothLeUart uart);
-        public void onDisconnected(BluetoothLeUart uart);
-        public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx);
-        public void onDeviceFound(BluetoothDevice device);
-        public void onDeviceInfoAvailable();
+        void onConnected(BluetoothLeUart uart);
+        void onConnectFailed(BluetoothLeUart uart);
+        void onDisconnected(BluetoothLeUart uart);
+        void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx);
+        void onDeviceFound(BluetoothDevice device);
+        void onDeviceInfoAvailable();
     }
 
     public BluetoothLeUart(Context context) {
@@ -83,6 +88,8 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         this.connectFirst = false;
         this.writeInProgress = false;
         this.readQueue = new ConcurrentLinkedQueue<BluetoothGattCharacteristic>();
+
+        this.superScanCallback = new SuperScanCallback(this);
     }
 
     // Return instance of BluetoothGatt.
@@ -105,7 +112,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         sb.append("Model        : " + disModel.getStringValue(0) + "\n");
         sb.append("Firmware     : " + disSWRev.getStringValue(0) + "\n");
         return sb.toString();
-    };
+    }
 
     public boolean deviceInfoAvailable() { return disAvailable; }
 
@@ -119,8 +126,18 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
         tx.setValue(data);
         writeInProgress = true; // Set the write in progress flag
         gatt.writeCharacteristic(tx);
-        // ToDo: Update to include a timeout in case this goes into the weeds
-        while (writeInProgress); // Wait for the flag to clear in onCharacteristicWrite
+
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+                           @Override
+                           public void run() {
+                               writeInProgress = false;
+                           }
+                       }
+                , 2000);
+
+        while (writeInProgress);
+        timer.cancel();
     }
 
     // Send data to connected UART device.
@@ -143,6 +160,7 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
     // Disconnect to a device if currently connected.
     public void disconnect() {
         if (gatt != null) {
+            gatt.close();
             gatt.disconnect();
         }
         gatt = null;
@@ -153,7 +171,8 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
     // Stop any in progress UART device scan.
     public void stopScan() {
         if (adapter != null) {
-            adapter.stopLeScan(this);
+            //adapter.stopLeScan(this);
+            adapter.getBluetoothLeScanner().stopScan(superScanCallback);
         }
     }
 
@@ -161,7 +180,23 @@ public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothA
     // when devices are found during scanning.
     public void startScan() {
         if (adapter != null) {
-            adapter.startLeScan(this);
+            //adapter.startLeScan(this);
+            adapter.getBluetoothLeScanner().startScan(superScanCallback);
+        }
+    }
+
+    class SuperScanCallback extends ScanCallback{
+
+        private BluetoothAdapter.LeScanCallback leScanCallback;
+
+        SuperScanCallback(BluetoothAdapter.LeScanCallback leScanCallback){
+            this.leScanCallback = leScanCallback;
+        }
+
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+            leScanCallback.onLeScan(result.getDevice(), result.getRssi(), result.getScanRecord().getBytes());
         }
     }
 
