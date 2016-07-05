@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Thread;
 import java.util.Date;
+import android.util.Log;
 
 public class MainActivity extends Activity implements BluetoothLeUart.Callback {
 
@@ -50,13 +51,17 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
 
     private StringBuilder output;
     private Integer receiveCounter;
+    // TODO Check
+    // is true, after clickStart(), after connection lost, clickStart() shall be started automatically
+    private Boolean receivingDataMode = false;
+    // (?) After reconnect, don't register Callback again (?)
+    private Boolean CallbackRegistration = true;
 
     private StringBuilder output(){
         if (output == null)
             output = new StringBuilder();
         return output;
     }
-
 
     // Write some text to the messages text view.
     // Care is taken to do this on the main UI thread so writeLine can be called from any thread
@@ -128,7 +133,11 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     protected void onResume() {
         super.onResume();
         writeLine("Scanning for devices ...\n");
-        uart.registerCallback(this);
+        //TODO onResume register Callback again, Check if old one was unregistered
+        // if (CallbackRegistration) {
+        //    uart.disconnect();
+              uart.registerCallback(this);
+        //}
         uart.connectFirstAvailable();
     }
 
@@ -173,7 +182,6 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     public void onConnected(BluetoothLeUart uart) {
         // Called when UART device is connected and ready to receive data.
         writeLine("Connected!\n");
-        receiveCounter = 0;
         // Enable the save button
         runOnUiThread(new Runnable() {
             @Override
@@ -189,6 +197,9 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
                 stop.setEnabled(true);
             }
         });
+        if (receivingDataMode) {
+            clickStart(start);
+        }
     }
 
     @Override
@@ -235,10 +246,13 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     @Override
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
         // Called when data is received by the UART.
-        writeLine(receiveCounter.toString());
-        writeLine("\n");
+        if(receiveCounter % 100 == 0) {
+            writeLine(receiveCounter.toString());
+            writeLine("\n");
+        }
         receiveCounter++;
         output().append(rx.getStringValue(0));
+        Log.d("RECEIVE", rx.getStringValue(0) + " #UART " + uart.toString());
     }
 
     @Override
@@ -294,6 +308,7 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     }
     public void clickStart(View view){
         receiveCounter = 0;
+        receivingDataMode = true;
         output().setLength(0);
         sendCommand(microCommand.START);
         writeLine("\n-- START --\n");
@@ -303,14 +318,16 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
         //Werte in App lassen, Stringbuffer beibehalten, Speichern als File noch möglich
         //Stoppt nur Werte Senden des Mikrocontrollers
         sendCommand(microCommand.STOP);
+        receivingDataMode = false;
         writeLine("\n-- STOP -- Click SAVE to save data now\n");
     }
 
     public void clickReset(View view) {
         sendCommand(microCommand.RESET);
+        receivingDataMode = false;
         receiveCounter = 0;
         output().setLength(0);
-        messages.clearComposingText();
+        messages.setText("");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -325,9 +342,11 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
                 stop.setEnabled(false);
             }
         });
+        //TODO Check
+        uart.unregisterCallback(this);
+        CallbackRegistration = false;
+
         writeLine("-- Wait for Reset ... --\n");
         onResume();
-
-
     }
 }

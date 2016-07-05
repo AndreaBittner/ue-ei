@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.lang.String;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import android.util.Log;
 
 public class BluetoothLeUart extends BluetoothGattCallback implements BluetoothAdapter.LeScanCallback {
 
