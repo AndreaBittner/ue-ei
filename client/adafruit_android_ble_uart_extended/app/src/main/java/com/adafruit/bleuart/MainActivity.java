@@ -56,8 +56,6 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     // TODO Check
     // is true, after clickStart(), after connection lost, clickStart() shall be started automatically
     private Boolean receivingDataMode = false;
-    // (?) After reconnect, don't register Callback again (?)
-    private Boolean CallbackRegistration = true;
 
     private StringBuilder output(){
         if (output == null)
@@ -346,7 +344,6 @@ public class MainActivity extends Activity implements BluetoothLeUart.Callback {
     public void clickReset(View view) {
         clickSave(view);
         sendCommand(microCommand.RESET);
-        receivingDataMode = false;
         receiveCounter = 0;
         oldReceiveCounter = 0;
         output().setLength(0);
