@@ -49,20 +49,20 @@ class Menu(QtGui.QMenuBar):
 
         # einzelne Menus zur Leiste hinzufügen
         fileMenu = self.addMenu('&Datei')
-        connMenu = self.addMenu('&Verbindung')
-        recMenu = self.addMenu('&Aufzeichnung')
+        # connMenu = self.addMenu('&Verbindung')
+        # recMenu = self.addMenu('&Aufzeichnung')
 
         # Menus Aktionen zuweisen
-        fileMenu.addAction(saveAction)
+        # fileMenu.addAction(saveAction)
         fileMenu.addAction(openAction)
         fileMenu.insertSeparator(None)
         fileMenu.addAction(exitAction)
 
-        connMenu.addAction(testConnectionAction)
-        connMenu.addAction(observeAction)
+        # connMenu.addAction(testConnectionAction)
+        # connMenu.addAction(observeAction)
 
-        recMenu.addAction(recordStartAction)
-        recMenu.addAction(recordStopAction)
+        # recMenu.addAction(recordStartAction)
+        # recMenu.addAction(recordStopAction)
 
     @QtCore.pyqtSlot()
     def start_record(self):
@@ -87,14 +87,14 @@ class Menu(QtGui.QMenuBar):
         fileDialog.setAcceptMode(fileDialog.AcceptOpen)
         fileDialog.setFileMode(fileDialog.ExistingFile)
         fileDialog.setViewMode(fileDialog.List)
-        filename = fileDialog.getOpenFileName(filter=QtCore.QString('*.csv'))
+        filename = fileDialog.getOpenFileName(filter=QtCore.QString('*.txt'))
 
         if filename:
             self.parentWindow.presenter.display(filename)
 
             # central_widget ändern
-            self.parentWindow.central_widget.removeWidget(self.parentWindow.observer)
-            self.parentWindow.central_widget.addWidget(self.parentWindow.presenter)
+            # self.parentWindow.central_widget.removeWidget(self.parentWindow.observer)
+            # self.parentWindow.central_widget.addWidget(self.parentWindow.presenter)
 
     @QtCore.pyqtSlot()
     def save_file(self):

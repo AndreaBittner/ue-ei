@@ -16,17 +16,19 @@ class Plotter(pg.PlotWidget):
         self.getPlotItem().setTitle(titel)
         self.getPlotItem().setRange(yRange=valueRange)
         self.getPlotItem().setMinimumWidth(950)
-        self.getPlotItem().setMaximumHeight(200)
-        self.getPlotItem().setMinimumHeight(200)
-        self.setMinimumHeight(200)
-        self.setMaximumHeight(200)
+        self.getPlotItem().setMaximumHeight(320)
+        self.getPlotItem().setMinimumHeight(320)
+        self.setMinimumHeight(320)
+        self.setMaximumHeight(320)
         self.showGrid(y=True)
         self.lines = lines
         self.colour = colour
 
         self.save = list()
 
-        self.initialize(valueRange)
+        self.data = list()
+
+        # self.initialize(valueRange)  # initialize wird nicht mehr benötigt, da keine random daten benötigt werden
 
     def initialize(self, valueRange):
         # Random data zum Testen
@@ -54,7 +56,7 @@ class Plotter(pg.PlotWidget):
             element.setPos(self.pointer, 0)
             number += 1
 
-    def save_data(self, filename):
+    def save_data(self, filename):  # obsolete
         if len(self.save[0]) > 0:  # falls es etwas zu speichern gibt
             f = open(filename, 'a')
             for i in range(0, self.lines):
@@ -74,6 +76,19 @@ class Plotter(pg.PlotWidget):
             message.setText(QtCore.QString(u'Es wurden keine aufgezeichneten Daten gefunden. Speichern abgebrochen'))
             message.setWindowTitle(QtCore.QString('Fehler'))
             message.exec_()
+
+    def set_data(self, data):
+        del self.data[:]
+        self.data = data
+
+        # alten Plot löschen
+        for element in self.getPlotItem().listDataItems():
+            self.getPlotItem().removeItem(element)
+
+        # neue Daten in Plot eintragen
+        for i in range(0, self.lines):
+            item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
+            self.getPlotItem().addItem(item)
 
     def read_file_data(self, filename, lines):
 
