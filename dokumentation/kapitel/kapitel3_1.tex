@@ -9,7 +9,7 @@
 Allgemeine Anforderungen an das instrumentierte Schüttgut:
 
 \begin{itemize}
-	\item Möglichst klein \textsuperscript{1\\)}
+	\item Möglichst klein, maximale Größe der Module \textsuperscript{1\\)}
 	\item Aufnehmen/Speichern von Bewegungsdaten
 	\item Übertragung von Daten an einen PC
 	\item Betrieben durch interne Batterie
@@ -25,7 +25,7 @@ Allgemeine Anforderungen an das instrumentierte Schüttgut:
 	\label{fig:k3}
 \end{figure}
 
-Die Beschaffung der Bauteile sollte zudem möglichst einfach sein. Von Vorteil ist, wenn alle Bauteile von einem deutschen Händler bezogen werden könnten, um einerseits nur einen einzelnen Liefervorgang zu haben und andrerseits eine geringere Lieferzeit (anstatt international).
+Die Beschaffung der Bauteile sollte zudem möglichst einfach sein. Von Vorteil ist, wenn alle Bauteile von einem deutschen Händler bezogen werden könnten, um einerseits nur einen einzelnen Liefervorgang zu haben und andrerseits eine geringere Lieferzeit (anstatt international). Auch eine ausreichende Dokumentation der einzelnen Module ist sehr nützlich für eine schnelle Implementierung des Mikrocontroller-Codes. Die einzelnen Module müssen kompatibel zueinander sein.
 
 \subsubsection*{Recherche}
 Begonnen wurde mit einer Recherche, welche Bauteile es gibt, mit denen sich solch ein instrumentiertes Schüttgut erstellen lässt. Als Hauptplatine wird ein Mikrocontroller benötigt, an dem weitere Bauteile angeschlossen werden können. Es gibt einzelne Sensormodule, die z.B.Orientierung und Beschleunigung in je 3 Achsen gleichzeitig messen können. Ebenso gibt es verschiedene Speicher- und Übertragungsmodule, die Daten auf eine SD-Karte loggen oder per Bluetooth / WLAN / ZigBee weiterleiten können. Ausschlaggebend bei der Wahl der einzelnen Module war zunächst die Größe der einzelnen Bauteile, die selbst die Größe eines Ü-Eis nicht übersteigen dürfen. Nach der Wahl eines passenden Mikrocontrollers müssen auch die Anschlussmöglichkeiten für weitere Module mit beachtet werden.
@@ -118,6 +118,33 @@ Die gewählten Bauteile sind alle von der Marke Adafruit. Der Vorteil darin lieg
 %TODO noch nicht fertig
 
 
-\subsubsection*{Machbarkeitsstudie und Löten}
+\subsubsection*{Machbarkeitsstudie, Prototyping und Löten}
+
+Vor der Bestellung wurden noch einige Machbarkeitsstudien durchgeführt. Neben dem Vergleich gegenüber anderen verfügbaren Modulen wurde ein Größentest durchgeführt und eine Wiring-Skizze angefertigt.
+
+Bei dem Größentest wurden die einzelnen Module Maßstabsgetreu mit Moosgummi nachgebaut. Dadurch konnte getestet werden, wie sich die Module am besten in der Ü-Ei-Kapsel anordnen lassen. Zusätzlich sollte in der Kapsel aber noch genügend Freiraum sein, da auch die einzelnen Kabelverbindungen zwischen den Modulen Platz benötigen.  \\
+Wie in %TODO Abbildungsnr + Foto
+deutlich wird, passen alle Module in die Kapsel und es ist noch ausreichend Platz für Verbindungen.
+
+Bei der Wiring-Skizze sind die Verbindungen der einzelnen Module verzeichnet. Abbildung ## zeigt die Skizze. Diese ist nicht maßstabsgetreu. Ziel war es, alle Module korrekt miteinander verbinden zu können. Damit konnten auch schon erste Überlegungen angestellt werden, wie die Module später auch in der Kapsel angeordnet werden könnten. Letztendlich wird die Skizze auch hilfreich beim Löten sein.
+
+%TODO Abildung für Skizze
+
+Nach positiven Ergebnissen aus den Machbarkeitsstudien wurden die Bauteile wie sie in Tabelle \ref{tab:bestellteHW} aufgeführt sind, bestellt. Da die Bestellung bei einem Händler getätigt wurde, waren die Bauteile in der folgenden Woche schon verfügbar.
+
+Für einen ersten Prototyp wurden die Bauteile mithilfe eines Breadboards und Verbindungskabel miteinandner verbunden. Zuerst wurden die Pro Trinkets getestet. (Hier ist leider ein Defekt eines Pro Trinkets aufgefallen.) Anschließend wurde das Bluetooth-Modul und zum Schluss das Sensor-Modul hinzugenommen.
+
+%TODO Bilder der beiden Prototyps
+
+An dieser Stelle wurde außer dem Adafruit Pro Trinket noch ein Arduino Uno hinzugenommen, um während der Programmierung %TODO Kapitelnr
+auch mit einer Seriellen Ausgabe testen zu können. Bei erfolgreichem Testen des Programmcodes wurde dieser dann auf den Adafruit Pro Trinket übertragen.
+%Erwähnen warum Uno schon vorher?
+
+Da drei Bausätze vorhanden waren, und nur einer für das Prototyping genutzt wurde, wurde mit dem Löten des ersten Bausatzes begonnen, der in die Ü-Ei Kapsel passen soll.
+Abbildung BLA### zeigt das fertig gelötete Bauteil.
+
+%TODO Bild
+
+
 % siehe Präsi
 % TODO 1) Bau des instrumentierten Schüttguts: Kriterien für instrumentiertes Schüttgut, Recherche und Machbarkeitsstudie der gewählten Bauteile, Verbindung der Bauteile und Löten; 
