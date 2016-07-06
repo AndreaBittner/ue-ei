@@ -36,6 +36,9 @@ float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
     #define MODE_LED_BEHAVIOUR          "MODE"
 /*=========================================================================*/
 
+// ID bestimmt, welches Ei sendet
+#define ID 1
+
 /*
 SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
 
@@ -216,6 +219,8 @@ void loop(void)
       ble.print(accel_event.acceleration.y);
       ble.print(",");
       ble.print(accel_event.acceleration.z);
+      ble.print(",");
+      ble.print(ID);
       ble.println("},");
      loopnr++;
     }
