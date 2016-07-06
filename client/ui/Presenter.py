@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui, QtCore
-import pyqtgraph as pg
 from Plotter import Plotter
+from Parser import Parser
 
 
 class Presenter(QtGui.QScrollArea):
@@ -22,8 +22,8 @@ class Presenter(QtGui.QScrollArea):
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setSpacing(15)
 
-        self.accel = Plotter('Beschleunigung', [0, 20])
-        self.gyro = Plotter('Gyroskop', [0, 10], 3, ['g', 'r', 'y'])
+        self.accel = Plotter('Beschleunigung', [-200, 200], 3, ['g', 'r', 'y'])
+        self.gyro = Plotter('Gyroskop', [-20, 20], 3, ['g', 'r', 'y'])
 
         self.vbox.addWidget(self.accel)
         self.vbox.setAlignment(self.accel, QtCore.Qt.AlignTop)
@@ -33,11 +33,15 @@ class Presenter(QtGui.QScrollArea):
 
         self.widget.setLayout(self.vbox)
 
-    # TODO:
-    def calculate_width(self):
+    def recalculate_width(self):
         # dynamische Anpassung der scrollArea Größe, damit der Graph schön dargestellt wird
-        pass
+        self.widget.setMinimumWidth(len(self.accel.data[0]) * 5 + 20)
 
     def display(self, filename):
-        self.accel.read_file_data(filename, [0])
-        self.gyro.read_file_data(filename, [1, 2, 3])
+        parser = Parser()
+        data = parser.parse(filename)
+
+        self.accel.set_data(data[0:3])
+        self.gyro.set_data(data[3:6])
+
+        self.recalculate_width()

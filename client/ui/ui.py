@@ -15,11 +15,11 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.observer = Observer()
+        # self.observer = Observer()
         self.presenter = Presenter()
 
         self.central_widget = QtGui.QStackedWidget()
-        self.central_widget.addWidget(self.observer)
+        self.central_widget.addWidget(self.presenter)
 
         self.menubar = Menu(self)
         self.initialize()
@@ -31,7 +31,7 @@ class MainWindow(QtGui.QMainWindow):
 
         self.setGeometry(0, 0, 1000, 500)
         self.setMinimumWidth(1000)
-        self.setMinimumHeight(500)
+        self.setMinimumHeight(710)
         self.setWindowTitle(u'Schüttgutbeobachter')
         self.show()
 
@@ -46,11 +46,11 @@ def main():
 
     ui = MainWindow()
 
-    time_out = functools.partial(update_plot, obj=ui)
+    # time_out = functools.partial(update_plot, obj=ui)
 
-    timer = pg.QtCore.QTimer()
-    timer.timeout.connect(time_out)  # Signal, welches gesendet wird
-    timer.start(50)  # Frequenz mit der ein Timersignal gesendet werden soll
+    # timer = pg.QtCore.QTimer()
+    # timer.timeout.connect(time_out)  # Signal, welches gesendet wird
+    # timer.start(50)  # Frequenz mit der ein Timersignal gesendet werden soll
 
     sys.exit(app.exec_())
 
