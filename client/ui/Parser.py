@@ -25,7 +25,7 @@ class Parser:
 
         f.close()
 
-        id_set = False
+        # id_set = False
 
         for i in range(0, len(raw_data)):
             irreg = raw_data[i].find("{")
@@ -38,12 +38,13 @@ class Parser:
             else:
                 tup = raw_data[i][irreg + 1:].split(',')
 
-            if not id_set and len(tup) == 8:
+            """if not id_set and len(tup) == 8:
                 ble_id = tup[-1]
-                id_set = True
+                id_set = True"""
 
             # nur komplette Datensätze verwenden
-            if len(tup) == 8 and ble_id == tup[-1]:
+            # if len(tup) == 9 and ble_id == tup[-1]:
+            if len(tup) == 8:
                 for j in range(2, len(tup)):
                     self.data[j-2].append(np.float(tup[j]))
 
