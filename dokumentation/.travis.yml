@@ -1,7 +1,7 @@
 compile_pdf:
   image: tianon/latex
   script:
-    - latexmk -pdf vorlage.tex
+    - latexmk -pdf dokumentation\vorlage.tex
   artifacts:
     paths:
-      - vorlage.pdf
+      - dokumentation\vorlage.pdf
