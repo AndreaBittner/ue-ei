@@ -48,13 +48,13 @@ Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
 
 /* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
 /* PRO TRINKET */
-// Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
+ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
 /* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
 /* UNO */
-Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
+/*Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
                              BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
-                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST); 
+                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST); */
 
 // A small helper
 void error(const __FlashStringHelper*err) {
@@ -92,7 +92,7 @@ void setup(void)
 {
 //  while (!Serial);  // required for Flora & Micro
 //  delay(500);
-  Serial.begin(115200);
+//  Serial.begin(115200);
 
   /* Initialise the module */
  // Serial.print(F("Initialising the Bluefruit LE module: "));
@@ -167,8 +167,12 @@ void loop(void)
           //RESET
           sending = false;
           loopnr = 0;
-          ble.factoryReset();
+          if ( ! ble.factoryReset() ){
+           error(F("Couldn't factory reset"));
+         }
+  //        Serial.print("reseted facotry");
           ble.echo(false);
+          ble.verbose(false);  // debug info 
           while (! ble.isConnected()) {
             delay(500);
           }
@@ -186,7 +190,7 @@ void loop(void)
     accel.getEvent(&accel_event);
     if (dof.accelGetOrientation(&accel_event, &orientation))
     {
-    Serial.println(loopnr);
+  //  Serial.println(loopnr);
        
      /* OUTPUT FORMAT BLE {[loopnr, time, roll, pitch, yaw, (accel) x, y z],..}  */
       ble.print("AT+BLEUARTTX=");
