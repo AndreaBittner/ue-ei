@@ -1,7 +1,27 @@
-\section{Projektdurchführung...}
+\section{Datenmessung}
 
 \subsection{Erster Testlauf}
-tbd; erste Erkenntnisse, notwendige Erweiterungen der App
+Nach dem ersten Testlauf mit der Android-App und dem Bauteil konnten wichtige neue Erkenntnisse gewonnen werden.
+
+
+Nach Reconnect Daten empfangen \& schreiben ohne Fehler!
+Timestamp: Zähler, der nach Reconnect nicht zurückgesetzt wird
+UI-Zugriff der App reduzieren, Eventuell automatisches Speichern (zur Sicherheit, falls App einfriert) bzw oder direkt schreiben in Datei?
+
+-	Bluetooth funktioniert an sich, Reichweite 5-10 Meter -> mitlaufen am Gerät allerdings mit Verbindungsabbrüchen, die aber an unterschiedlichen Stellen
+-	Schutz des Ü-Ei’s: Mit Polsterfolie wesentlich langsamer als Steine
+-	Kosten pro Satz ungefähr 40 Euro
+-	Akkus halten doch länger als geplant
+-	Für Zukunft evtl interessant: BLE-Verstärker an Anlage; mehrere BLE-Funkgeräte über einen BLE-Empfänger verbinden
+
 
 %Vorgang mit Daten-Messung, Messen mit unterschiedlichen Einstellungsparamtern?
 % Daten sammeln: wie wird getestet, Bilder der Anlage, Aufbau
+
+\subsection{Hauptlauf}
+
+Verbesserung der App aufgrund der Erkenntnisse vom 1. Durchlauf. Dadurch lief die App so stabil, dass es kaum zu Verbindungsabbrüchen kam. An immer gleichen Punkten auf der Anlage wurden die Daten zwischengespeichert, -> App legte dann neue Datendatei an. Dadurch am Ende evtl besser zuordbar, welchen Abschnitt der Anlage die Daten beschreiben
+
+Messen in Polsterfolie, Polsterfolie mit Flügeln, ohne Verpackung
+
+Messfehler in den letzten Dateien, Grund?
