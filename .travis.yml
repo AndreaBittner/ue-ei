@@ -3,7 +3,7 @@ cache: packages
 
 before_install:
 - cd dokumentation
-- "sudo apt-get update && sudo apt-get install --no-install-recommends texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra texlive-latex-recommended dvipng"
+- "sudo apt-get update && sudo apt-get install --no-install-recommends texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra texlive-latex-recommended dvipng textlive-lang-german"
 - tlmgr install index
 
 install:
