@@ -11,7 +11,7 @@ install:
 
 script:
 - mkdir _build
-- pdflatex -output-directory _build dokumentation/vorlage.tex
+- pdflatex -output-directory _build vorlage.tex
 
 deploy:
   provider: releases
