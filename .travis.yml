@@ -1,7 +1,23 @@
-compile_pdf:
-  image: tianon/latex
-  script:
-    - latexmk -pdf dokumentation\vorlage.tex
-  artifacts:
-    paths:
-      - dokumentation\vorlage.pdf
+language: r
+cache: packages
+
+before_install:
+- cd dokumentation
+- "sudo apt-get update && sudo apt-get install --no-install-recommends texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra texlive-latex-recommended dvipng"
+- tlmgr install index
+
+install:
+  - PATH=$HOME/texlive/bin/x86_64-linux:$PATH
+
+script:
+- mkdir _build
+- pdflatex -output-directory _build dokumentation/vorlage.tex
+
+deploy:
+  provider: releases
+  file: vorlage.pdf
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
+    repo: andreabittner/dokumentation
