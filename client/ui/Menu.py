@@ -7,79 +7,79 @@ from Presenter import Presenter
 import os
 
 class Menu(QtGui.QMenuBar):
-    def __init__(self, parentWindow):
+    def __init__(self, parent_window):
         super(Menu, self).__init__()
 
-        self.parentWindow = parentWindow
+        self.parent_window = parent_window
         self.initialize()
 
     def initialize(self):
 
         # Definiere mögliche Aktionen
-        exitAction = QtGui.QAction(QtGui.QIcon('exit.png'), '&Verlassen', self)
-        exitAction.setShortcut('Ctrl+Q')
-        exitAction.setStatusTip('Verlassen')
-        exitAction.triggered.connect(QtGui.qApp.quit)
+        exit_action = QtGui.QAction(QtGui.QIcon('exit.png'), '&Verlassen', self)
+        exit_action.setShortcut('Ctrl+Q')
+        exit_action.setStatusTip('Verlassen')
+        exit_action.triggered.connect(QtGui.qApp.quit)
 
-        saveAction = QtGui.QAction(QtGui.QIcon('save.png'), '&Speichern', self)
-        saveAction.setShortcut('Ctrl+S')
-        saveAction.setStatusTip('Aufzeichnung Speichern')
-        saveAction.triggered.connect(self.save_file)
+        save_action = QtGui.QAction(QtGui.QIcon('save.png'), '&Speichern', self)
+        save_action.setShortcut('Ctrl+S')
+        save_action.setStatusTip('Aufzeichnung Speichern')
+        save_action.triggered.connect(self.save_file)
 
-        openAction = QtGui.QAction(QtGui.QIcon('open.png'), u'&Öffnen', self)
-        openAction.setShortcut('Ctrl+O')
-        openAction.setStatusTip(u'Aufzeichnung öffnen')
-        openAction.triggered.connect(self.open_file)
+        open_action = QtGui.QAction(QtGui.QIcon('open.png'), u'&Öffnen', self)
+        open_action.setShortcut('Ctrl+O')
+        open_action.setStatusTip(u'Aufzeichnung öffnen')
+        open_action.triggered.connect(self.open_file)
 
-        testConnectionAction = QtGui.QAction(QtGui.QIcon('test.png'), '&Verbindung testen', self)
-        testConnectionAction.setStatusTip(u'Verbindung zum Schüttgut testen')
-        # TODO: testConnectionAction.triggered.connect()
+        test_connection_action = QtGui.QAction(QtGui.QIcon('test.png'), '&Verbindung testen', self)
+        test_connection_action.setStatusTip(u'Verbindung zum Schüttgut testen')
+        # TODO: test_connection_action.triggered.connect()
 
-        observeAction = QtGui.QAction(QtGui.QIcon('observe.png'), '&Verbindungsdaten beobachten', self)
-        observeAction.setStatusTip('Darstellung der momentan empfangenen Daten')
-        observeAction.triggered.connect(self.observe)
+        observe_action = QtGui.QAction(QtGui.QIcon('observe.png'), '&Verbindungsdaten beobachten', self)
+        observe_action.setStatusTip('Darstellung der momentan empfangenen Daten')
+        observe_action.triggered.connect(self.observe)
 
-        recordStartAction = QtGui.QAction(QtGui.QIcon('start.png'), '&Aufzeichnung starten', self)
-        recordStartAction.setStatusTip('Aufzeichnung der Sensordaten starten')
-        recordStartAction.triggered.connect(self.start_record)
+        record_start_action = QtGui.QAction(QtGui.QIcon('start.png'), '&Aufzeichnung starten', self)
+        record_start_action.setStatusTip('Aufzeichnung der Sensordaten starten')
+        record_start_action.triggered.connect(self.start_record)
 
-        recordStopAction = QtGui.QAction(QtGui.QIcon('stop.png'), '&Aufzeichnung stoppen', self)
-        recordStopAction.setStatusTip('Aufzeichnung der Sensordaten stoppen')
-        recordStopAction.triggered.connect(self.stop_record)
+        record_stop_action = QtGui.QAction(QtGui.QIcon('stop.png'), '&Aufzeichnung stoppen', self)
+        record_stop_action.setStatusTip('Aufzeichnung der Sensordaten stoppen')
+        record_stop_action.triggered.connect(self.stop_record)
 
-        mergeAction = QtGui.QAction(QtGui.QIcon('merge.png'), '&Dateien kombinieren', self)
-        mergeAction.setStatusTip('Geteilte Daten zu Rundendaten zusammenfügen')
-        mergeAction.triggered.connect(self.merge_files)
+        merge_action = QtGui.QAction(QtGui.QIcon('merge.png'), '&Dateien kombinieren', self)
+        merge_action.setStatusTip('Geteilte Daten zu Rundendaten zusammenfügen')
+        merge_action.triggered.connect(self.merge_files)
 
-        statsAction = QtGui.QAction(QtGui.QIcon('stats.png'), '&Testlaufinformationen anzeigen', self)
-        statsAction.setStatusTip('Zusätzliche Informationen zum Testlauf anzeigen')
-        statsAction.triggered.connect(self.show_stats)
+        stats_action = QtGui.QAction(QtGui.QIcon('stats.png'), '&Testlaufinformationen anzeigen', self)
+        stats_action.setStatusTip('Zusätzliche Informationen zum Testlauf anzeigen')
+        stats_action.triggered.connect(self.show_stats)
 
         # einzelne Menus zur Leiste hinzufügen
-        fileMenu = self.addMenu('&Datei')
-        extraMenu = self.addMenu('&Extra')
-        # connMenu = self.addMenu('&Verbindung')
-        # recMenu = self.addMenu('&Aufzeichnung')
+        file_menu = self.addMenu('&Datei')
+        extra_menu = self.addMenu('&Extra')
+        # conn_menu = self.addMenu('&Verbindung')
+        # record_menu = self.addMenu('&Aufzeichnung')
 
         # Menus Aktionen zuweisen
-        # fileMenu.addAction(saveAction)
-        fileMenu.addAction(openAction)
-        fileMenu.insertSeparator(None)
-        fileMenu.addAction(exitAction)
+        # file_menu.addAction(save_action)
+        file_menu.addAction(open_action)
+        file_menu.insertSeparator(None)
+        file_menu.addAction(exit_action)
 
-        extraMenu.addAction(mergeAction)
-        extraMenu.addAction(statsAction)
+        extra_menu.addAction(merge_action)
+        extra_menu.addAction(stats_action)
 
-        # connMenu.addAction(testConnectionAction)
-        # connMenu.addAction(observeAction)
+        # conn_menu.addAction(test_connection_action)
+        # conn_menu.addAction(observe_action)
 
-        # recMenu.addAction(recordStartAction)
-        # recMenu.addAction(recordStopAction)
+        # record_menu.addAction(record_start_action)
+        # record_menu.addAction(record_stop_action)
 
     @QtCore.pyqtSlot()
     def start_record(self):
-        if type(self.parentWindow.central_widget.currentWidget()) is Observer:
-            self.parentWindow.central_widget.currentWidget().start_record()
+        if type(self.parent_window.central_widget.currentWidget()) is Observer:
+            self.parent_window.central_widget.currentWidget().start_record()
         else:
             message = QtGui.QMessageBox()
             message.addButton(message.Ok)
@@ -89,20 +89,20 @@ class Menu(QtGui.QMenuBar):
 
     @QtCore.pyqtSlot()
     def stop_record(self):
-        if type(self.parentWindow.central_widget.currentWidget()) is Observer:
-            self.parentWindow.central_widget.currentWidget().stop_record()
+        if type(self.parent_window.central_widget.currentWidget()) is Observer:
+            self.parent_window.central_widget.currentWidget().stop_record()
 
     @QtCore.pyqtSlot()
     def open_file(self):
-        fileDialog = QtGui.QFileDialog()
-        fileDialog.setDirectory(QtCore.QString(os.getcwd()))
-        fileDialog.setAcceptMode(fileDialog.AcceptOpen)
-        fileDialog.setFileMode(fileDialog.ExistingFile)
-        fileDialog.setViewMode(fileDialog.List)
-        filename = fileDialog.getOpenFileName(filter=QtCore.QString('*.txt'))
+        file_dialog = QtGui.QFileDialog()
+        file_dialog.setDirectory(QtCore.QString(os.getcwd()))
+        file_dialog.setAcceptMode(file_dialog.AcceptOpen)
+        file_dialog.setFileMode(file_dialog.ExistingFile)
+        file_dialog.setViewMode(file_dialog.List)
+        filename = file_dialog.getOpenFileName(filter=QtCore.QString('*.txt'))
 
         if filename:
-            self.parentWindow.presenter.display(filename)
+            self.parent_window.presenter.display(filename)
 
             # central_widget ändern
             # self.parentWindow.central_widget.removeWidget(self.parentWindow.observer)
@@ -110,31 +110,31 @@ class Menu(QtGui.QMenuBar):
 
     @QtCore.pyqtSlot()
     def save_file(self):
-        if type(self.parentWindow.central_widget.currentWidget()) is Observer:
-            fileDialog = QtGui.QFileDialog()
-            fileDialog.setDirectory(QtCore.QString(os.getcwd()))
-            fileDialog.setAcceptMode(fileDialog.AcceptSave)
-            fileDialog.setFileMode(fileDialog.AnyFile)
-            fileDialog.setViewMode(fileDialog.List)
-            fileDialog.setDefaultSuffix(QtCore.QString('.csv'))  # funktioniert nicht
-            filename = fileDialog.getSaveFileName(filter=QtCore.QString('*.csv'))
+        if type(self.parent_window.central_widget.currentWidget()) is Observer:
+            file_dialog = QtGui.QFileDialog()
+            file_dialog.setDirectory(QtCore.QString(os.getcwd()))
+            file_dialog.setAcceptMode(file_dialog.AcceptSave)
+            file_dialog.setFileMode(file_dialog.AnyFile)
+            file_dialog.setViewMode(file_dialog.List)
+            file_dialog.setDefaultSuffix(QtCore.QString('.csv'))  # funktioniert nicht
+            filename = file_dialog.getSaveFileName(filter=QtCore.QString('*.csv'))
 
             if filename:
                 # TODO: catch if file exists --> overwrite?
                 # TODO: automatisch dateiendung setzen
-                self.parentWindow.central_widget.currentWidget().save_file(filename)
+                self.parent_window.central_widget.currentWidget().save_file(filename)
 
     @QtCore.pyqtSlot()
     def observe(self):
-        if type(self.parentWindow.central_widget.currentWidget()) is Presenter:
-            self.parentWindow.central_widget.removeWidget(self.parentWindow.presenter)
-            self.parentWindow.central_widget.addWidget(self.parentWindow.observer)
+        if type(self.parent_window.central_widget.currentWidget()) is Presenter:
+            self.parent_window.central_widget.removeWidget(self.parent_window.presenter)
+            self.parent_window.central_widget.addWidget(self.parent_window.observer)
 
     @QtCore.pyqtSlot()
     def merge_files(self):
-        directory_name = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
-        self.parentWindow.presenter.merge_files(directory_name)
+        directory_name = str(QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory'))
+        self.parent_window.presenter.merge_files(directory_name)
 
     @QtCore.pyqtSlot()
     def show_stats(self):
-        self.parentWindow.presenter.show_stats()
+        self.parent_window.presenter.show_stats()

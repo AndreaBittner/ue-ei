@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from Testfile import Testfile
 import numpy as np
 from os import walk
 from os import path
@@ -12,43 +13,51 @@ class Parser:
         pass
 
     def parse(self, filename):
+        test = Testfile(filename)
+
         f = open(filename, 'r')
 
-        # teile string in Tupel
-        for line in f:
-            stripped = line[line.find("{") + 1:line.rfind("}")]
-        raw_data = stripped.split("},{")
+        if f:
+            # teile string in Tupel
+            for line in f:
+                stripped = line[line.find('{') + 1:line.rfind('}')]
+            raw_data = stripped.split('},{')
 
-        f.close()
+            f.close()
 
-        id_set = False
-        data = list()
-        for i in range(0, 6):
-            data.append(list())
+            id_set = False
+            for i in range(0, 6):
+                test.data.append(list())
 
-        # abfangen, wenn }/{ in Daten auftaucht
-        for i in range(0, len(raw_data)):
-            irreg = raw_data[i].find("{")
-            if irreg == -1:
-                irreg = raw_data[i].find("}")
+            # abfangen, wenn }/{ in Daten auftaucht
+            for i in range(0, len(raw_data)):
+                irreg = raw_data[i].find('{')
                 if irreg == -1:
-                    tup = raw_data[i].split(',')
+                    irreg = raw_data[i].find('}')
+                    if irreg == -1:
+                        tup = raw_data[i].split(',')
+                    else:
+                        tup = raw_data[i][:irreg].split(',')
                 else:
-                    tup = raw_data[i][:irreg].split(',')
-            else:
-                tup = raw_data[i][irreg + 1:].split(',')
+                    tup = raw_data[i][irreg + 1:].split(',')
 
-            if not id_set and len(tup) == 9:
-                ble_id = tup[-1]
-                id_set = True
+                if not id_set and len(tup) == 9:
+                    ble_id = tup[-1]
+                    id_set = True
 
-            # nur komplette Datensätze verwenden
-            if len(tup) == 9 and ble_id == tup[-1]:
-                # if len(tup) == 8:
-                for j in range(2, len(tup) - 1):
-                    data[j - 2].append(np.float(tup[j]))
+                # nur komplette Datensätze verwenden
+                if len(tup) == 9 and ble_id == tup[-1]:
+                    # if len(tup) == 8:
+                    for j in range(2, len(tup) - 1):
+                        test.data[j - 2].append(np.float(tup[j]))
 
-        return data
+            # Statistikwerte hinzufuegen
+            for i in range(0, len(test.data)):
+                test.max_values[i] = max(test.data[i])
+                test.min_values[i] = min(test.data[i])
+            test.time = int(raw_data[-1].split(',')[1]) - int(raw_data[0].split(',')[1])
+
+        return test
 
     def merge_files(self, directory_name):
         f = []
@@ -70,10 +79,7 @@ class Parser:
             current_file = open(path.join(directory_name, element), 'r')
             for line in current_file:
                 # unvollstaendige Datensaetze bereinigen
-                data = line[line.find("{"):line.rfind("}") + 1]
+                data = line[line.find('{'):line.rfind('}') + 1]
                 new_file.write(data)
             current_file.close()
             new_file.close()
-
-    def stats(self, filename):
-        print 'Statistik fuer ' + filename + ' gefordert\n'

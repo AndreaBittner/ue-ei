@@ -4,6 +4,7 @@
 from PyQt4 import QtGui, QtCore
 from Plotter import Plotter
 from Parser import Parser
+from Testfile import Testfile
 
 
 class Presenter(QtGui.QScrollArea):
@@ -23,9 +24,9 @@ class Presenter(QtGui.QScrollArea):
         self.vbox.setSpacing(15)
 
         self.accel = Plotter('Beschleunigung', [-20, 20], 3, ['g', 'r', 'y'])
-        self.gyro = Plotter('Gyroskop', [-200, 200], 3, ['g', 'r', 'y'])
+        self.gyro = Plotter('Gyroskop', [-360, 360], 3, ['g', 'r', 'y'])
         self.parser = Parser()
-        self.current_file = ''
+        self.current_file = Testfile('')
 
         self.vbox.addWidget(self.accel)
         self.vbox.setAlignment(self.accel, QtCore.Qt.AlignTop)
@@ -40,16 +41,19 @@ class Presenter(QtGui.QScrollArea):
         self.widget.setMinimumWidth(len(self.accel.data[0]) * 8 + 20)
 
     def recalculate_height(self):
-        # TODO: Range Graph anpassen
-        pass
+        accel_min = min(self.current_file.min_values[3:6])
+        accel_max = max(self.current_file.max_values[3:6])
+        gyro_min = min(self.current_file.min_values[0:3])
+        gyro_max = max(self.current_file.max_values[0:3])
+        self.accel.set_height([accel_min, accel_max])
+        self.gyro.set_height([gyro_min, gyro_max])
 
     def display(self, filename):
-        self.current_file = filename
+        testfile = self.parser.parse(filename)
+        self.current_file = testfile
 
-        data = self.parser.parse(filename)
-
-        self.accel.set_data(data[3:6])
-        self.gyro.set_data(data[0:3])
+        self.accel.set_data(testfile.data[3:6])
+        self.gyro.set_data(testfile.data[0:3])
 
         self.recalculate_width()
         self.recalculate_height()
@@ -58,4 +62,16 @@ class Presenter(QtGui.QScrollArea):
         self.parser.merge_files(directory_name)
 
     def show_stats(self):
-        self.parser.stats(self.current_file)
+        message = QtGui.QMessageBox()
+        message.addButton(message.Ok)
+        message.setText(QtCore.QString(
+            u'Statistik für Datei {0}\t\t\t\n Laufzeit:\t{1}\t\t\nGyroskop:\n    roll:\t{2}, {3}\n    pitch:\t{4}, {5}\n    yaw:\t{6}, {7}\nBeschleunigung:\n    x:\t{8}, {9}\n    y:\t{10}, {11}\n    z:\t{12}, {13}'.format(
+                unicode(self.current_file.name), unicode(self.current_file.time),
+                unicode(self.current_file.min_values[0]), unicode(self.current_file.max_values[0]),
+                unicode(self.current_file.min_values[1]), unicode(self.current_file.max_values[1]),
+                unicode(self.current_file.min_values[2]), unicode(self.current_file.max_values[2]),
+                unicode(self.current_file.min_values[3]), unicode(self.current_file.max_values[3]),
+                unicode(self.current_file.min_values[4]), unicode(self.current_file.max_values[4]),
+                unicode(self.current_file.min_values[5]), unicode(self.current_file.max_values[5]))))
+        message.setWindowTitle(QtCore.QString('Statistik'))
+        message.exec_()

@@ -7,14 +7,14 @@ import numpy as np
 
 
 class Plotter(pg.PlotWidget):
-    def __init__(self, titel, valueRange=[0, 20], lines=1, colour=['r']):
+    def __init__(self, titel, value_range=[0, 20], lines=1, colour=['r']):
         super(Plotter, self).__init__()
 
         self.pointer = 0  # Pointer zum verschieben, der plots
         self.track = False  # zeigt an, ob die empfangenen Daten aufgezeichnet werden sollen
 
         self.getPlotItem().setTitle(titel)
-        self.getPlotItem().setRange(yRange=valueRange)
+        self.getPlotItem().setRange(yRange=value_range)
         self.getPlotItem().setMinimumWidth(950)
         self.getPlotItem().setMaximumHeight(320)
         self.getPlotItem().setMinimumHeight(320)
@@ -28,18 +28,21 @@ class Plotter(pg.PlotWidget):
 
         self.data = list()
 
-        # self.initialize(valueRange)  # initialize wird nicht mehr benötigt, da keine random daten benötigt werden
+        # self.initialize(value_range)  # initialize wird nicht mehr benötigt, da keine random daten benötigt werden
 
-    def initialize(self, valueRange):
+    def initialize(self, value_range):
         # Random data zum Testen
         self.data = list()
         for i in range(0, self.lines):
-            self.data.append(np.random.normal(valueRange[-1] / 2, (valueRange[-1] - valueRange[0]) / 4, size=100))
+            self.data.append(np.random.normal(value_range[-1] / 2, (value_range[-1] - value_range[0]) / 4, size=100))
             item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
             self.getPlotItem().addItem(item)
 
             # Listen für Speichern erstellen
             self.save.append(list())
+
+    def set_height(self, value_range):
+        self.getPlotItem().setRange(yRange=value_range)
 
     def update(self):
         self.pointer += 1
