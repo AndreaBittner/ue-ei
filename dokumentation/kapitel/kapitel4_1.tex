@@ -1,27 +1,24 @@
 \section{Datenmessung}
 
-\subsection{Erster Testlauf}
-Nach dem ersten Testlauf mit der Android-App und dem Bauteil konnten wichtige neue Erkenntnisse gewonnen werden.
+\subsection{Erkenntnisse aus dem ersten Testlauf}
+Nach dem ersten Testlauf mit der Android-App und dem Bauteil konnten neue wichtige Erkenntnisse gewonnen werden.
+Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüchen. In der App gibt es noch einige Unstimmigkeiten, die behoben werden sollten, damit verwertbare Daten aufgezeichnet werden können. 
 
-
-Nach Reconnect Daten empfangen \& schreiben ohne Fehler!
-Timestamp: Zähler, der nach Reconnect nicht zurückgesetzt wird
-UI-Zugriff der App reduzieren, Eventuell automatisches Speichern (zur Sicherheit, falls App einfriert) bzw oder direkt schreiben in Datei?
-
--	Bluetooth funktioniert an sich, Reichweite 5-10 Meter -> mitlaufen am Gerät allerdings mit Verbindungsabbrüchen, die aber an unterschiedlichen Stellen
--	Schutz des Ü-Ei’s: Mit Polsterfolie wesentlich langsamer als Steine
--	Kosten pro Satz ungefähr 40 Euro
--	Akkus halten doch länger als geplant
--	Für Zukunft evtl interessant: BLE-Verstärker an Anlage; mehrere BLE-Funkgeräte über einen BLE-Empfänger verbinden
-
-
-%Vorgang mit Daten-Messung, Messen mit unterschiedlichen Einstellungsparamtern?
-% Daten sammeln: wie wird getestet, Bilder der Anlage, Aufbau
+\begin{itemize}
+	\item Es muss einen fortlaufenden Zähler vom Mikrocontroller aus geben, damit nach einem Verbindungsabbruch und -wiederaufbau der Zähler mitten im Durchlauf nicht auch wieder bei 0 beginnt
+	\item Beheben eines Bugs im beim Datenaufzeichnen nach dem ersten Verbindungsabbruch
+	\item Der Zugriff auf die UI-Elemente ist zu hoch. Die Ausgabe auf die UI ist langsamer, als die eingehenden Daten, weshalb die App ab vielen Ausgaben eingefrohren ist. Ab dann konnten bisher empfangene Daten auch nicht mehr gespeichert werden
+	\item Das Speichern sollte performanter sein
+	\item Wie lässt sich ein Rundendurchlauf bzw einzelne markante Punkte in der Anlage währen der Datenaufzeichnung markieren, um nachträglich die analysierten Daten evaluieren zu lassen?
+	\item Bluetooth funktioniert über eine Reichweite zwischen 5-10 Metern. Bei zu vielen Verbindungsabbrüchen muss mit dem Empfangsgeräte an der Anlage mitgelaufen werden, da die Wände der Anlage etwas zu abschirmend sind. Eventuell gibt es eine Möglichkeit mehrere BLE-Empfänger an der Anlage zu positionieren
+	\item Zum Schutz des Bauteils wurde die Kapsel in Polsterfolie eingepackt. Dadurch wurde das Bauteil langsamer durch die Anlage befördert als die Steine
+	\item Ein Akku mit 100 mAh hält doch länger als anfangs angenommen
+\end{itemize}
 
 \subsection{Hauptlauf}
 
-Verbesserung der App aufgrund der Erkenntnisse vom 1. Durchlauf. Dadurch lief die App so stabil, dass es kaum zu Verbindungsabbrüchen kam. An immer gleichen Punkten auf der Anlage wurden die Daten zwischengespeichert, -> App legte dann neue Datendatei an. Dadurch am Ende evtl besser zuordbar, welchen Abschnitt der Anlage die Daten beschreiben
+Nach Optimierung der Android App konnten wieder Daten gemessen werden. Die Bluetooth-Verbindungsaufbau wurde verändert, sodass die Verbindung nun viel stabiler lief. Pro Rundendurchgang wurde ein interner Zähler der App auf 0 gesetzt, um Runden im Datensatz identifizieren zu können. Zusätzlich wurde an immer gleichen Punkte in der Anlage die empfangen Daten zwischen gespeichert. Da damit eine neue Datei angelegt wurde, können auch einzelne Anlagenabschnitte ungefähr zugeordnet werden.
 
-Messen in Polsterfolie, Polsterfolie mit Flügeln, ohne Verpackung
+Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt. Da dadurch die Kapsel auf der Anlage langsamer als die Steine befördert wurde, wurden an die Verpackung noch drei Flügel angebracht, damit Steine darüber die Kapsel besser mitnehmen können. Dadurch war die Kapsel ebenso schnell wie die Steine und lag auch auf den einzelnen Beförderungsmodulen sehr stabil (wenig Orientierungsänderungen). Zum Abschluss wurde die Kapsel ohne Verpackungsmaterial durch die Anlage geschickt. Die Kapsel war hier ebenso schnell wie die Steine, allerdings war hier zu beobachten, dass die Kapsel sich sehr viel drehte. 
 
-Messfehler in den letzten Dateien, Grund?
+In den letzten Dateien kam es zu Testfehlern, indem keine aktuellen Daten vom Sensormodul mehr gesendet wurden.

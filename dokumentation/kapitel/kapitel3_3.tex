@@ -1,8 +1,23 @@
 \subsection{Empfangen der Messwerte}
 
-\subsubsection{Schreiben eines eigenen BLE Clients mit Python}
-tbd (Python Libaries, Probleme)
+\subsubsection{BLE Clients mit Python}
+tbd: Ursprünglich: Python, Probleme mit Libaries, was wäre Vorteil gewesen wenn es funktioniert hätte...)
 
 \subsubsection{Alternativ Client zum Empfang der Daten per BLE: Android App}
+Da es bereits die Android-App TODO von Adafruit gibt, mit der Daten per BLE empfangen und gesendet werden können, konnte davon ausgegangen werden, dass in der Konstallation Smartphone-Blufruit-Modul BLE-Verbindungen funktionieren und unterstützt werden. Der Vorteil der sich daraus weiter ergibt ist, dass ein Smartphone als Empfänger wesentlich mobiler ist, um an der Anlage auch etwas am Sender mitlaufen zu können. 
+
+Von Adafruit gibt es unter Github TODO eine Klasse, mit der eine BLE-Verbindung zu einem Bluefruit-Modul von einem Android-Smartphone aus hergestellt werden kann. Dabei handelt es sich um eine abgespeckte Variante der App ,,Adafruit BLE Connect''. 
+
+Zuerst musste eine Verbindung mit dem Bluefruit-Modul hergestellt werden. Die App verfügt über vier Buttons:
+\begin{description}
+	\item[Start] Sendet einen Start-Befehl an den Mikrocontroller, damit dieser mit dem Senden von gemessenen Sensordaten beginnt
+	\item[Stop] Sendet einen Stop-Befehl an den Mikrocontroller, damit dieser mit dem Senden von gemessenen Sensordaten stoppt. Die gemessenen Daten bleiben dabei in einem String Buffer vorhanden
+	\item[Save] Speichert die gemessenen Daten in einem neuen File ab. Dabei werden genutzte Zähler nicht zurückgesetzt. Der Button kann benutzt werden, um bei einem Testlauf markante Punkte performant zu markieren, indem ein neues File erstellt wird.
+	\item[Reset \& Save] Speichert die gemessenen Werte in ein File und setzt anschließen genutzte Zähler zurück. Zusätzlich wird ein Reset-Befehlt an den Mikrocontroller gesendet, um die BLE-Verbindung neuzustarten und ebenfalls Zähler zurückzusetzen. Bei erfolgreicher Wiederverbindung, beginnt direkt wieder der Datenempfang, sofern der Mikrocontroller vorher auch im Senden-Modus war.
+\end{description}
+
+
+Die Daten werden auf dem Smartphone gespeichert und müssen anschließend auf einen Rechner übertragen werden. Hier gibt es sicher noch Potential zur Erweiterung, indem die Daten direkt über einen Data Service an eines PC oder Laptop weitergeleitet werden könnten
+
 tbd (Android, Java, Adafruit UART-Beispiel, Erweiterungen)
 Erweiterungen nach dem ersten Testlauf
