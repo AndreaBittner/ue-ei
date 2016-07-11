@@ -22,8 +22,10 @@ class Presenter(QtGui.QScrollArea):
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setSpacing(15)
 
-        self.accel = Plotter('Beschleunigung', [-200, 200], 3, ['g', 'r', 'y'])
-        self.gyro = Plotter('Gyroskop', [-20, 20], 3, ['g', 'r', 'y'])
+        self.accel = Plotter('Beschleunigung', [-20, 20], 3, ['g', 'r', 'y'])
+        self.gyro = Plotter('Gyroskop', [-200, 200], 3, ['g', 'r', 'y'])
+        self.parser = Parser()
+        self.current_file = ''
 
         self.vbox.addWidget(self.accel)
         self.vbox.setAlignment(self.accel, QtCore.Qt.AlignTop)
@@ -35,13 +37,25 @@ class Presenter(QtGui.QScrollArea):
 
     def recalculate_width(self):
         # dynamische Anpassung der scrollArea Größe, damit der Graph schön dargestellt wird
-        self.widget.setMinimumWidth(len(self.accel.data[0]) * 5 + 20)
+        self.widget.setMinimumWidth(len(self.accel.data[0]) * 8 + 20)
+
+    def recalculate_height(self):
+        # TODO: Range Graph anpassen
+        pass
 
     def display(self, filename):
-        parser = Parser()
-        data = parser.parse(filename)
+        self.current_file = filename
 
-        self.accel.set_data(data[0:3])
-        self.gyro.set_data(data[3:6])
+        data = self.parser.parse(filename)
+
+        self.accel.set_data(data[3:6])
+        self.gyro.set_data(data[0:3])
 
         self.recalculate_width()
+        self.recalculate_height()
+
+    def merge_files(self, directory_name):
+        self.parser.merge_files(directory_name)
+
+    def show_stats(self):
+        self.parser.stats(self.current_file)
