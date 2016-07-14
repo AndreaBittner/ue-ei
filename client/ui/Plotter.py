@@ -4,6 +4,8 @@
 from PyQt4 import QtGui, QtCore
 import pyqtgraph as pg
 import numpy as np
+from scipy.signal import savgol_filter
+from scipy.interpolate import interp1d
 
 
 class Plotter(pg.PlotWidget):
@@ -82,14 +84,69 @@ class Plotter(pg.PlotWidget):
 
     def set_data(self, data):
         del self.data[:]
-        self.data = data
+        # self.data = data
+
+        for i in range(0, len(data)):
+            # ***********************************************
+            # Savgol Filter
+            """
+            x = np.arange(1.0, len(data[i]) + 1, 1.0)
+            y = np.asarray(data[i])
+
+            xx = np.linspace(x.min(), x.max(), len(data[i]))
+
+            itp = interp1d(x, y, kind='linear')
+            smoothed = savgol_filter(itp(xx), 17, 5)  # Um Filterung zu aendern muessen die hinteren beiden Zahlen angepasst werden
+            # Savgol ist eine polynominale Regression; vorderer Wert ist Fenstergroesse, hinterer Grad des Polynoms
+            # Je kleiner der vordere Wert und je groesser der hintere, desto naeher ist die Kurve am Original
+
+            self.data.append(smoothed)
+            print(smoothed)
+            print(type(smoothed))
+            """
+
+            # **********************************************
+            # Ab hier Kalman Filter (Ich bin mir allerdings nicht sicher, ob ich seine Funktionsweise ganz korrekt implementiert habe)
+            n_iter = len(data[0])
+            sz = (n_iter,)  # size of array
+            z = data[i]  # observed data
+
+            # Ich weiss noch nicht genau, wie sich die aenderung der Parameter genau auf das resultierende Bild auswirkt
+            # Die Parameter beeinflussen sich auch untereinander, das ist alles bisher sehr experimentell bei mir
+            Q = 1e-5  # process noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
+
+            # allocate space for arrays
+            x = np.zeros(sz)  # a posteri estimate of x
+            p = np.zeros(sz)  # a posteri error estimate
+            x_minus = np.zeros(sz)  # a priori estimate of x
+            p_minus = np.zeros(sz)  # a priori error estimate
+            k = np.zeros(sz)  # Kalman gain
+
+            R = 0.1 ** 2  # estimate of measurement noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
+
+            # intial guesses
+            x[0] = 0.0
+            p[0] = 1.0  # estimated error
+
+            for j in range(1, n_iter):
+                # time update
+                x_minus[j] = x[j - 1]
+                p_minus[j] = p[j - 1] + Q
+
+                # measurement update
+                k[j] = p_minus[j] / (p_minus[j] + R)
+                x[j] = x_minus[j] + k[j] * (z[j] - x_minus[j])
+                p[j] = (1 - k[j]) * p_minus[j]
+
+            self.data.append(x)
+            # *************************************************************
 
         # alten Plot löschen
         for element in self.getPlotItem().listDataItems():
             self.getPlotItem().removeItem(element)
 
         # neue Daten in Plot eintragen
-        for i in range(0, self.lines):
+        for i in range(0, len(self.data)):
             item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
             self.getPlotItem().addItem(item)
 
@@ -113,4 +170,3 @@ class Plotter(pg.PlotWidget):
         for i in range(0, self.lines):
             item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
             self.getPlotItem().addItem(item)
-
