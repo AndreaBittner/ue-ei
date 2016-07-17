@@ -1,5 +1,42 @@
 \subsection{Client zur Datenanalyse}
-tbd, Python, Libraries von Adafruit..
-
-Datenformat erklären
-
+Der Client ist in Python implementiert, da zum Zeitpunkt, als die Probleme in der Adafruit BLE Library bekannt wurden, bereits große Teile des Clients implementiert waren.
+\subsubsection{Graphisches User Interface}
+Für die Darstellung graphischer Bedienelemente im Client, wurde die Library PyQt4 verwendet, die eine leichte Integration der Graphen der Sensordaten ermöglicht. Diese werden durch eine weitere Bibliothek erzeugt, können aber durch sogenannte Widgets in die GUI geladen werden.
+Da keine Echtzeitübertragung möglich ist, werden nur wenige Bedienelemente, welche in einer Menuleiste untergebracht sind, benötigt:
+\begin{itemize}
+\item Öffnen einer Testdatei
+\item Anzeigen von Statistiken über den Testlauf (Dauer des Testlaufs, gemessene minimal und maximal Werte)
+\item Zusammenfügen von Dateien, wenn ein Testlauf in verschiedenen Dateien gespeichert ist
+\item Parametrisieren der Filter
+\end{itemize}
+\subsubsection{Datenformat}
+Um alle weiteren Verarbeitungsschritte zu erleichtern wird ein einfaches Datenformat verwendet.
+%TODO include Bild
+\subsubsection{Parser}
+Der Parser operiert auf oben beschriebenen Datenformat und hat zwei Hauptaufgaben:
+\begin{itemize}
+ \item Bereinigen der Daten, falls unvollständige, oder inkorrekte Tupel ankommen
+ \item Aufteilen der Daten in Arrays, welche dann als Graph dargestellt werden können
+\end{itemize}
+Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellung and die Klasse Plotter übergeben werden.
+\subsubsection{Darstellen von Daten}
+Das Darstellen der Daten erfolgt in der Klasse Plotter, welche die Module numpy und pyqtgraph verwendet. Durch letzteres wird ein PlotWidget erzeugt, welches genau einen Graphen beinhaltet, der entweder die Werte der drei Achsen des Gyroskops oder des Beschleunigungssensors darstellt.
+Ein PlotWidget enthält ein PlotItem welches eine Menge von PlotDataItems enthält, d.h. eine Menge von gemessenen Datenpunkten.
+%TODO include bild eines Graphen
+\subsubsection{Datenaufbereitung}
+Durch verschiedene äußere Bedingungen (z.B. Empfindlichkeit des Sensors oder Vibration der Bahn) werden die gemessenen Rohdaten verfälscht. Durch Anwendung von Filtern, können die Daten verbessert werden.
+Hierbei wurden zwei Ansätze verfolgt:
+\begin{itemize}
+\item Savitzky-Golay-Filter
+\item Kalman-Filter
+\end{itemize}
+\paragraph{Savitzky-Golay-Filter}
+Das Savitzky-Golay-Filter ist ein einfaches Glättungsfilter, bei dem auf die Daten der Kurve innerhalb eines Fensters eine polynomiale Regression angewandt wird.
+\paragraph{Kalman-Filter}
+Das Kalman-Filter zieht im Gegensatz zum Savitzky-Golay-Filter zwei verschiedene Arten von Rauschen in betracht:
+\begin{itemize}
+\item Prozessrauschen (beispielsweise Vibration der Bahn)
+\item Sensorrauschen (Messfehler des Sensors)
+\end{itemize}
+Eine geringe Vibration der Bahn hat meist keine Auswirkung auf die Bewegung des Schüttguts, kann jedoch die Messdaten verfälschen. 
+Bei beiden Filtern ist die Wahl der Parameter entscheidend. Diese hat großen Einfluss auf die Form des resultierenden Graphen. Das macht sie aber auch besonders problematisch, da sie nur experimentell ermittelt werden können und unklar bleibt, wie weit die Graphen tatsächlich geglättet werden müssen, um ein verwertbares Ergebnis zu erhalten. 
