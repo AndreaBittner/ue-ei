@@ -15,7 +15,7 @@ Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüch
 	\item Ein Akku mit 100 mAh hält doch länger als anfangs angenommen
 \end{itemize}
 
-\subsection{Hauptlauf}
+\subsection{Erster Messlauf}
 
 Nach Optimierung der Android App konnten wieder Daten gemessen werden. Die Bluetooth-Verbindungsaufbau wurde verändert, sodass die Verbindung nun viel stabiler lief. Pro Rundendurchgang wurde ein interner Zähler der App auf 0 gesetzt, um Runden im Datensatz identifizieren zu können. Zusätzlich wurde an immer gleichen Punkte in der Anlage die empfangen Daten zwischen gespeichert. Da damit eine neue Datei angelegt wurde, können auch einzelne Anlagenabschnitte ungefähr zugeordnet werden.
 
@@ -24,3 +24,7 @@ Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt. Da dadurc
 In den letzten Dateien kam es zu Testfehlern, indem keine aktuellen Daten vom Sensormodul mehr gesendet wurden.
 
 %TODO Bilder von den unterschiedlichen Kapselmessungen
+
+\subsection{Zweiter Messlauf}
+%TODO
+Wir haben zwar keine Sensordaten zum Evaluieren. Aber haben Erfahung damit gewonnen: Alu ist nicht förderlich für BLE; Mikrocontroller ist auch bei Lötstellen/Wackelkontakten nicht sehr robust; und allein vom Beobachten auf der Anlage ist das Kästchen oft auch zurückgerollt (trotz Kanten) und Oberfläche Ducktape ist nicht so gut
