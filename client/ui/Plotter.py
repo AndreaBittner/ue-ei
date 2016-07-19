@@ -29,6 +29,7 @@ class Plotter(pg.PlotWidget):
         self.save = list()
 
         self.data = list()
+        self.raw_data = list()  # damit man unterschiedliche Filter anwenden kann, ohne dass gefilterte Daten nochmal gefiltert werden
 
         # self.initialize(value_range)  # initialize wird nicht mehr benötigt, da keine random daten benötigt werden
 
@@ -84,36 +85,60 @@ class Plotter(pg.PlotWidget):
 
     def set_data(self, data):
         del self.data[:]
-        # self.data = data
+        del self.raw_data[:]
+        self.raw_data = list(data)
+        self.data = list(data)
+
+        self.redraw_plot()
+
+    def redraw_plot(self):
+        # alten Plot löschen
+        for element in self.getPlotItem().listDataItems():
+            self.getPlotItem().removeItem(element)
+
+        # neue Daten in Plot eintragen
+        for i in range(0, len(self.data)):
+            item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
+            self.getPlotItem().addItem(item)
+
+    def no_filter(self):
+        self.data = list(self.raw_data)
+
+        self.redraw_plot()
+
+    def savgol_filter(self, window=17, grade=5):
+        data = list(self.raw_data)
+        del self.data[:]
 
         for i in range(0, len(data)):
-            # ***********************************************
-            # Savgol Filter
-            """
             x = np.arange(1.0, len(data[i]) + 1, 1.0)
             y = np.asarray(data[i])
 
             xx = np.linspace(x.min(), x.max(), len(data[i]))
 
             itp = interp1d(x, y, kind='linear')
-            smoothed = savgol_filter(itp(xx), 17, 5)  # Um Filterung zu aendern muessen die hinteren beiden Zahlen angepasst werden
+            smoothed = savgol_filter(itp(xx), window, grade)
+            # Um Filterung zu aendern muessen die hinteren beiden Zahlen angepasst werden
             # Savgol ist eine polynominale Regression; vorderer Wert ist Fenstergroesse, hinterer Grad des Polynoms
             # Je kleiner der vordere Wert und je groesser der hintere, desto naeher ist die Kurve am Original
 
             self.data.append(smoothed)
-            print(smoothed)
-            print(type(smoothed))
-            """
 
-            # **********************************************
-            # Ab hier Kalman Filter (Ich bin mir allerdings nicht sicher, ob ich seine Funktionsweise ganz korrekt implementiert habe)
+        self.redraw_plot()
+
+    def kalman_filter(self, q=1e-3, r=0.125):
+        # sonst wird nur ein pointer zur selben liste erzeugt und data wird geloescht, wenn self.data geloescht wird
+        data = list(self.raw_data)
+        del self.data[:]
+
+        for i in range(0, len(data)):
             n_iter = len(data[0])
             sz = (n_iter,)  # size of array
             z = data[i]  # observed data
 
             # Ich weiss noch nicht genau, wie sich die aenderung der Parameter genau auf das resultierende Bild auswirkt
             # Die Parameter beeinflussen sich auch untereinander, das ist alles bisher sehr experimentell bei mir
-            Q = 1e-5  # process noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
+            Q = q  # process noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
 
             # allocate space for arrays
             x = np.zeros(sz)  # a posteri estimate of x
@@ -122,7 +147,7 @@ class Plotter(pg.PlotWidget):
             p_minus = np.zeros(sz)  # a priori error estimate
             k = np.zeros(sz)  # Kalman gain
 
-            R = 0.1 ** 2  # estimate of measurement noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
+            R = r  # estimate of measurement noise  <-- Diese Variable kann angepasst werden um das Ergebnis zu aendern
 
             # intial guesses
             x[0] = 0.0
@@ -139,34 +164,5 @@ class Plotter(pg.PlotWidget):
                 p[j] = (1 - k[j]) * p_minus[j]
 
             self.data.append(x)
-            # *************************************************************
 
-        # alten Plot löschen
-        for element in self.getPlotItem().listDataItems():
-            self.getPlotItem().removeItem(element)
-
-        # neue Daten in Plot eintragen
-        for i in range(0, len(self.data)):
-            item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
-            self.getPlotItem().addItem(item)
-
-    def read_file_data(self, filename, lines):
-
-        f = open(filename, 'r')
-
-        # nur um sicherzugehen, dass alle alten Daten gelöscht sind
-        del self.data[:]
-
-        for i, line in enumerate(f):
-            if i in lines:
-                self.data.append(np.fromstring(line, dtype=float, sep=','))
-        f.close()
-
-        # alten Plot löschen
-        for element in self.getPlotItem().listDataItems():
-            self.getPlotItem().removeItem(element)
-
-        # neue Daten in Plot eintragen
-        for i in range(0, self.lines):
-            item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
-            self.getPlotItem().addItem(item)
+        self.redraw_plot()

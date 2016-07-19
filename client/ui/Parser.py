@@ -3,6 +3,7 @@
 
 from Testfile import Testfile
 import numpy as np
+from os import remove
 from os import walk
 from os import path
 import re
@@ -64,6 +65,12 @@ class Parser:
         for (dirpath, dirnames, filenames) in walk(directory_name):
             f.extend(filenames)
             break
+
+        # alte testdateien loeschen, um verdopplung zu vermeiden
+        for element in f:
+            m = re.match(r'[0-9]*_data_test_[0-9]+\.txt', element)
+            if m:
+                remove(path.join(directory_name, element))
 
         # alphabetisch sortieren um zusammenfuegen zu vereinfachen
         f = sorted(f)

@@ -6,6 +6,7 @@ from Observer import Observer
 from Presenter import Presenter
 import os
 
+
 class Menu(QtGui.QMenuBar):
     def __init__(self, parent_window):
         super(Menu, self).__init__()
@@ -14,6 +15,13 @@ class Menu(QtGui.QMenuBar):
         self.initialize()
 
     def initialize(self):
+
+        # einzelne Menus zur Leiste hinzufuegen
+        file_menu = self.addMenu('&Datei')
+        extra_menu = self.addMenu('&Extra')
+        filter_menu = extra_menu.addMenu('Filter')
+        # conn_menu = self.addMenu('&Verbindung')
+        # record_menu = self.addMenu('&Aufzeichnung')
 
         # Definiere mögliche Aktionen
         exit_action = QtGui.QAction(QtGui.QIcon('exit.png'), '&Verlassen', self)
@@ -55,11 +63,16 @@ class Menu(QtGui.QMenuBar):
         stats_action.setStatusTip('Zusätzliche Informationen zum Testlauf anzeigen')
         stats_action.triggered.connect(self.show_stats)
 
-        # einzelne Menus zur Leiste hinzufügen
-        file_menu = self.addMenu('&Datei')
-        extra_menu = self.addMenu('&Extra')
-        # conn_menu = self.addMenu('&Verbindung')
-        # record_menu = self.addMenu('&Aufzeichnung')
+        ag = QtGui.QActionGroup(self, exclusive=True)
+
+        no_filter_action = QtGui.QAction('Kein Filter', self, checkable=True, checked=True)
+        no_filter_action.triggered.connect(self.no_filter)
+        a = ag.addAction(no_filter_action)
+        filter_menu.addAction(a)
+        savgol_filter_action = QtGui.QAction('Savitzky-Golay-Filter', self, checkable=True)
+        savgol_filter_action.triggered.connect(self.savgol_filter)
+        a = ag.addAction(savgol_filter_action)
+        filter_menu.addAction(a)
 
         # Menus Aktionen zuweisen
         # file_menu.addAction(save_action)
@@ -69,6 +82,7 @@ class Menu(QtGui.QMenuBar):
 
         extra_menu.addAction(merge_action)
         extra_menu.addAction(stats_action)
+
 
         # conn_menu.addAction(test_connection_action)
         # conn_menu.addAction(observe_action)
@@ -138,3 +152,24 @@ class Menu(QtGui.QMenuBar):
     @QtCore.pyqtSlot()
     def show_stats(self):
         self.parent_window.presenter.show_stats()
+
+    @QtCore.pyqtSlot()
+    def no_filter(self):
+        self.parent_window.presenter.accel.no_filter()
+        self.parent_window.presenter.gyro.no_filter()
+
+    @QtCore.pyqtSlot()
+    def savgol_filter(self):
+        text, ok = QtGui.QInputDialog.getText(self, u"Anwendung des Savitzky-Golay-Filter",
+                                              u"Bitte geben Sie Fenstergröße (ungerade!) und Grad getrennt durch ein Komma in das Textfeld ein\n")
+        if ok:
+            window, grade = int(text.split(",")[0]), int(text.split(",")[1])
+            if window % 2 == 0:
+                message = QtGui.QMessageBox()
+                message.addButton(message.Ok)
+                message.setText(QtCore.QString(u'Fenstergröße muss ungerade sein!'))
+                message.setWindowTitle(QtCore.QString('Fehler'))
+                message.exec_()
+            else:
+                self.parent_window.presenter.accel.savgol_filter(window, grade)
+                self.parent_window.presenter.gyro.savgol_filter(window, grade)
