@@ -7,7 +7,7 @@ Da keine Echtzeitübertragung möglich ist, werden nur wenige Bedienelemente, we
 \item Öffnen einer Testdatei
 \item Anzeigen von Statistiken über den Testlauf (Dauer des Testlaufs, gemessene minimal und maximal Werte)
 \item Zusammenfügen von Dateien, wenn ein Testlauf in verschiedenen Dateien gespeichert ist
-\item Parametrisieren der Filter
+\item Parametrisieren des Filters
 \end{itemize}
 \subsubsection{Datenformat}
 Um alle weiteren Verarbeitungsschritte zu erleichtern wird ein einfaches Datenformat verwendet.
@@ -25,18 +25,19 @@ Ein PlotWidget enthält ein PlotItem welches eine Menge von PlotDataItems enthä
 %TODO include bild eines Graphen
 \subsubsection{Datenaufbereitung}
 Durch verschiedene äußere Bedingungen (z.B. Empfindlichkeit des Sensors oder Vibration der Bahn) werden die gemessenen Rohdaten verfälscht. Durch Anwendung von Filtern, können die Daten verbessert werden.
-Hierbei wurden zwei Ansätze verfolgt:
-\begin{itemize}
+Hierbei wurden zwei Ansätze analysiert, aber nur einer implementiert:
+\begin{enumerate}
 \item Savitzky-Golay-Filter
 \item Kalman-Filter
-\end{itemize}
+\end{enumerate}
 \paragraph{Savitzky-Golay-Filter}
-Das Savitzky-Golay-Filter ist ein einfaches Glättungsfilter, bei dem auf die Daten der Kurve innerhalb eines Fensters eine polynomiale Regression angewandt wird.
+Das Savitzky-Golay-Filter ist ein einfaches Glättungsfilter, bei dem auf die Daten der Kurve innerhalb eines Fensters eine polynomiale Regression angewandt wird. Das Filter hat gute Eigenschaften, wenn es um die relative Verteilung von Maxima und Minima geht. Es ist wahrscheinlich, dass durch die Empfindlichkeit der Sensoren bereits kleinste Vibrationen der Bahn aufgezeichnet werden. Diese geben jedoch kaum Aufschluss, in welchem Abschnitt der Sortieranlage sich das Schüttgut derzeit befindet. Größere Bewegungen, die auch in größeren Ausschlägen in den Sensoren resultiern, sind dafür besser geeignet. Insofern ist der Erhalt der Maxima und Minima von Nutzen.
+Die Parameter, die bei diesem Filter verändert werden können, sind die Fensterbreite und der Grad des Polynoms. Je größer das Fenster und desto niedriger der Grad, desto mehr wird die Kurve effektiv gedämpft.
 \paragraph{Kalman-Filter}
 Das Kalman-Filter zieht im Gegensatz zum Savitzky-Golay-Filter zwei verschiedene Arten von Rauschen in betracht:
 \begin{itemize}
-\item Prozessrauschen (beispielsweise Vibration der Bahn)
-\item Sensorrauschen (Messfehler des Sensors)
+\item Prozessrauschen 
+\item Sensorrauschen
 \end{itemize}
-Eine geringe Vibration der Bahn hat meist keine Auswirkung auf die Bewegung des Schüttguts, kann jedoch die Messdaten verfälschen. 
-Bei beiden Filtern ist die Wahl der Parameter entscheidend. Diese hat großen Einfluss auf die Form des resultierenden Graphen. Das macht sie aber auch besonders problematisch, da sie nur experimentell ermittelt werden können und unklar bleibt, wie weit die Graphen tatsächlich geglättet werden müssen, um ein verwertbares Ergebnis zu erhalten. 
+Jedoch ist die Wahl und Beschreibung des zu Grunde liegenden Systems entscheidend für die Parameterwahl. Ist das System nur unzureichend bekannt und wird deshalb schlecht beschrieben, ist der Filter nicht mehr als ein Tiefpass und wird keine guten Ergebnisse liefern. Da in unserem Fall die Erfahrung in der Anwendung eines solchen Filters fehlt, wurde dieser Ansatz bereits nach kurzer Zeit verworfen.
+Die Wahl der Parameter ist beim Einsatz von Filtern entscheidend. Diese haben großen Einfluss auf die Form des resultierenden Graphen. Das macht sie aber auch besonders problematisch, da sie meist nur experimentell ermittelt werden können und unklar bleibt, wie weit die Graphen tatsächlich geglättet werden müssen, um ein verwertbares Ergebnis zu erhalten. 
