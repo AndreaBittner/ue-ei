@@ -10,8 +10,13 @@ Da keine Echtzeitübertragung möglich ist, werden nur wenige Bedienelemente, we
 \item Parametrisieren des Filters
 \end{itemize}
 \subsubsection{Datenformat}
-Um alle weiteren Verarbeitungsschritte zu erleichtern wird ein einfaches Datenformat verwendet.
-%TODO include Bild
+Um alle weiteren Verarbeitungsschritte zu erleichtern wird ein einfaches Datenformat, welches Json ähnelt, verwendet. Die ausgelesenen Sensordaten werden in einem Tupel zusammen mit einem Zeitstempel, einer fortlaufenden Nummer und einer ID, welches den verwendenten Mikrocontroller identifiziert, gesendet.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/k3-datenformat.png}
+	\caption {Eingesetztes Datenformat}
+	\label{fig:k3-datenformat.png} 
+\end{figure}
 \subsubsection{Parser}
 Der Parser operiert auf oben beschriebenen Datenformat und hat zwei Hauptaufgaben:
 \begin{itemize}
@@ -22,10 +27,15 @@ Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellu
 \subsubsection{Darstellen von Daten}
 Das Darstellen der Daten erfolgt in der Klasse Plotter, welche die Module numpy und pyqtgraph verwendet. Durch letzteres wird ein PlotWidget erzeugt, welches genau einen Graphen beinhaltet, der entweder die Werte der drei Achsen des Gyroskops oder des Beschleunigungssensors darstellt.
 Ein PlotWidget enthält ein PlotItem welches eine Menge von PlotDataItems enthält, d.h. eine Menge von gemessenen Datenpunkten.
-%TODO include bild eines Graphen
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/k3_4-graph.png}
+	\caption {Beispielgraph}
+	\label{fig:k3_4-graph.png} 
+\end{figure}
 \subsubsection{Datenaufbereitung}
 Durch verschiedene äußere Bedingungen (z.B. Empfindlichkeit des Sensors oder Vibration der Bahn) werden die gemessenen Rohdaten verfälscht. Durch Anwendung von Filtern, können die Daten verbessert werden.
-Hierbei wurden zwei Ansätze analysiert, aber nur einer implementiert:
+Hierbei wurden zwei Ansätze betrachtet, aber nur einer implementiert:
 \begin{enumerate}
 \item Savitzky-Golay-Filter
 \item Kalman-Filter
