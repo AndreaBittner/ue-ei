@@ -83,7 +83,6 @@ class Menu(QtGui.QMenuBar):
         extra_menu.addAction(merge_action)
         extra_menu.addAction(stats_action)
 
-
         # conn_menu.addAction(test_connection_action)
         # conn_menu.addAction(observe_action)
 
