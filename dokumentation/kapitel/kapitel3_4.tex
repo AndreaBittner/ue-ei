@@ -1,7 +1,7 @@
 \subsection{Client zur Datenanalyse}
 Der Client ist in Python implementiert, da zum Zeitpunkt, als die Probleme in der Adafruit BLE Library bekannt wurden, bereits große Teile des Clients implementiert waren.
 \subsubsection{Graphisches User Interface}
-Für die Darstellung graphischer Bedienelemente im Client, wurde die Library PyQt4 verwendet, die eine leichte Integration der Graphen der Sensordaten ermöglicht. Diese werden durch eine weitere Bibliothek erzeugt, können aber durch sogenannte Widgets in die GUI geladen werden.
+Für die Darstellung graphischer Bedienelemente im Client, wurde die Library \texttt{PyQt4} verwendet, die eine leichte Integration der Graphen der Sensordaten ermöglicht. Diese werden durch eine weitere Bibliothek erzeugt, können aber durch sogenannte Widgets in die GUI geladen werden.
 Da keine Echtzeitübertragung möglich ist, werden nur wenige Bedienelemente, welche in einer Menuleiste untergebracht sind, benötigt:
 \begin{itemize}
 \item Öffnen einer Testdatei
@@ -23,16 +23,16 @@ Der Parser operiert auf oben beschriebenen Datenformat und hat zwei Hauptaufgabe
  \item Bereinigen der Daten, falls unvollständige, oder inkorrekte Tupel ankommen
  \item Aufteilen der Daten in Arrays, welche dann als Graph dargestellt werden können
 \end{itemize}
-Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellung and die Klasse Plotter übergeben werden.
+Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellung and die Klasse \texttt{Plotter} übergeben werden. Da für die Werte der x-Achse die Zeitstempel verwendet werden sollen, enthalten diese Listen jeweils Tupel der Form \texttt{(Zeitstempel, gemessener Wert)}.
 \subsubsection{Darstellen von Daten}
-Das Darstellen der Daten erfolgt in der Klasse Plotter, welche die Module numpy und pyqtgraph verwendet. Durch letzteres wird ein PlotWidget erzeugt, welches genau einen Graphen beinhaltet, der entweder die Werte der drei Achsen des Gyroskops oder des Beschleunigungssensors darstellt.
-Ein PlotWidget enthält ein PlotItem welches eine Menge von PlotDataItems enthält, d.h. eine Menge von gemessenen Datenpunkten.
+Das Darstellen der Daten erfolgt in der Klasse \texttt{Plotter}, welche die Module \texttt{numpy} und \texttt{pyqtgraph} verwendet. Durch letzteres wird ein \texttt{PlotWidget} erzeugt, welches genau einen Graphen beinhaltet, der entweder die Werte der drei Achsen des Gyroskops oder des Beschleunigungssensors darstellt (In \ref{fig:k3_4-graph.png} ist ein solcher Graph beispielhaft dargestellt).
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/k3_4-graph.png}
 	\caption {Beispielgraph}
 	\label{fig:k3_4-graph.png} 
 \end{figure}
+Ein \texttt{PlotWidget} enthält ein \texttt{PlotItem} welches eine Menge von \texttt{PlotDataItems} enthält, d.h. eine Menge von gemessenen Datenpunkten.
 \subsubsection{Datenaufbereitung}
 Durch verschiedene äußere Bedingungen (z.B. Empfindlichkeit des Sensors oder Vibration der Bahn) werden die gemessenen Rohdaten verfälscht. Durch Anwendung von Filtern, können die Daten verbessert werden.
 Hierbei wurden zwei Ansätze betrachtet, aber nur einer implementiert:
