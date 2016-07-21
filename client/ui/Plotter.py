@@ -23,13 +23,14 @@ class Plotter(pg.PlotWidget):
         self.setMinimumHeight(320)
         self.setMaximumHeight(320)
         self.showGrid(y=True)
+        self.showGrid(x=True)
         self.lines = lines
         self.colour = colour
 
-        self.save = list()
+        # self.save = list()
 
-        self.data = list()
-        self.raw_data = list()  # damit man unterschiedliche Filter anwenden kann, ohne dass gefilterte Daten nochmal gefiltert werden
+        self.data = list()  # enthaelt 3 Listen von (x, y) Tupeln
+        self.raw_data = list()  # damit man mehrmals Filter anwenden kann, ohne dass gefilterte Daten nochmal gefiltert werden
 
         # self.initialize(value_range)  # initialize wird nicht mehr benötigt, da keine random daten benötigt werden
 
@@ -98,7 +99,9 @@ class Plotter(pg.PlotWidget):
 
         # neue Daten in Plot eintragen
         for i in range(0, len(self.data)):
-            item = pg.PlotDataItem(self.data[i], pen=pg.mkPen(width=1.5, color=self.colour[i]))
+            print [x[0] for x in self.data[i]]
+            print [y[1] for y in self.data[i]]
+            item = pg.PlotDataItem(x=[x[0] for x in self.data[i]], y=[y[1] for y in self.data[i]], pen=pg.mkPen(width=1.5, color=self.colour[i]))
             self.getPlotItem().addItem(item)
 
     def no_filter(self):
@@ -110,9 +113,9 @@ class Plotter(pg.PlotWidget):
         data = list(self.raw_data)
         del self.data[:]
 
-        for i in range(0, len(data)):
+        for i in range(0, len(data)):  # sollten drei durchlaeufe sein
             x = np.arange(1.0, len(data[i]) + 1, 1.0)
-            y = np.asarray(data[i])
+            y = np.asarray([y[1] for y in data[i]])
 
             xx = np.linspace(x.min(), x.max(), len(data[i]))
 
@@ -122,7 +125,7 @@ class Plotter(pg.PlotWidget):
             # Savgol ist eine polynominale Regression; vorderer Wert ist Fenstergroesse, hinterer Grad des Polynoms
             # Je kleiner der vordere Wert und je groesser der hintere, desto naeher ist die Kurve am Original
 
-            self.data.append(smoothed)
+            self.data.append(zip([x[0] for x in data[i]], smoothed))
 
         self.redraw_plot()
 
@@ -134,7 +137,7 @@ class Plotter(pg.PlotWidget):
         for i in range(0, len(data)):
             n_iter = len(data[0])
             sz = (n_iter,)  # size of array
-            z = data[i]  # observed data
+            z = [y[1] for y in data[i]]  # observed data
 
             # Ich weiss noch nicht genau, wie sich die aenderung der Parameter genau auf das resultierende Bild auswirkt
             # Die Parameter beeinflussen sich auch untereinander, das ist alles bisher sehr experimentell bei mir
@@ -163,6 +166,6 @@ class Plotter(pg.PlotWidget):
                 x[j] = x_minus[j] + k[j] * (z[j] - x_minus[j])
                 p[j] = (1 - k[j]) * p_minus[j]
 
-            self.data.append(x)
+            self.data.append(zip([n[0] for n in data[i]], x))
 
         self.redraw_plot()

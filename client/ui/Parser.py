@@ -50,12 +50,12 @@ class Parser:
                 if len(tup) == 9 and ble_id == tup[-1]:
                     # if len(tup) == 8:
                     for j in range(2, len(tup) - 1):
-                        test.data[j - 2].append(np.float(tup[j]))
+                        test.data[j - 2].append((int(tup[1]), np.float(tup[j])))
 
             # Statistikwerte hinzufuegen
             for i in range(0, len(test.data)):
-                test.max_values[i] = max(test.data[i])
-                test.min_values[i] = min(test.data[i])
+                test.max_values[i] = max(test.data[i][1])
+                test.min_values[i] = min(test.data[i][1])
             test.time = int(raw_data[-1].split(',')[1]) - int(raw_data[0].split(',')[1])
 
         return test

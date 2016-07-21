@@ -56,7 +56,7 @@ class Presenter(QtGui.QScrollArea):
         self.gyro.set_data(testfile.data[0:3])
 
         self.recalculate_width()
-        self.recalculate_height()
+        # self.recalculate_height()
 
     def merge_files(self, directory_name):
         self.parser.merge_files(directory_name)
