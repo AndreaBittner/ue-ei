@@ -21,8 +21,15 @@
 \maketitle
 
 \begin{abstract}
-%Hier eine kommt die Zusammenfassung
 %TODO Zusammenfassung
+
+In diesem Projekt wurde untersucht, ob mit Hilfe von instrumentiertem Schüttgut mehr Informationen über das Bewegungsverhalten von Schüttgut gewonnen werden kann, um den Sortierprozess einer Bandsortieranlage besser verstehen und optimieren zu können. 
+Es wurde ein instrumentiertes Schüttgut gebaut, das in eine Überraschungsei-Kapsel passt und mit dem Bewegungs- und Orientierungsdaten gemessen werden können. Der Prototyp wurde zuerst in Machbarkeitsstudien evaluiert, anschließend implementiert. Gemessene Daten durch den Mikrocontroller können über eine Bluetooth Low Energy-Verbindung an eine eigen entwickelte Android-App übermittelt und gespeichert werden. Zusätzlich kann über die App das Verhalten des Mikrocontrollers und der Speicherung auf dem Smartphone kontrolliert werden. \\
+Für die Analyse der Daten wird ebenfalls ein in Python selbst entwickelter Client verwendet, der die Rohdaten zunächst aufbereitet und anschließend visualisiert. \\
+Im weiteren Verlauf wurden die gesammelten Daten analysiert, dabei wurde auch das Savitzky-Golay-Filter eingesetzt. Es konnten Bewegungsmuster in den gesammelten Daten erkannt werden, die sich durch bestimmte Charakteristiken auch auf die Anlagenmodule abbilden lassen. Neben dem Fazit mit den gewonnen Erkenntnissen aus Messreihen und Datenanalysen werden Vorschläge für Erweiterungen gegeben.
+
+Das Projekt basiert auf der FlexSort-Anlage, eine Bandsortieranlage des Fraunhofer IOSB in Karlsruhe.
+
 \end{abstract}
 \clearpage
 \tableofcontents
