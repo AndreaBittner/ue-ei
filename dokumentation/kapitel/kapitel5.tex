@@ -9,8 +9,9 @@ Die Analyse wird durch zwei Faktoren erschwert:
 	\item Baulich bedingt dreht sich das Ei sehr leicht um die vertikale Achse, wodurch eine kurze Beschleunigung auf eine konstante Geschwindigkeit nicht als ein einzelner Ausschlag, sondern als eine Kombination verschiedener dargestellt wird und so kaum erkennbar ist.
 \end{enumerate}
 
+Da bisher noch kein Klassifikator existiert, wird die Auswertung von Hand ausgewertet. Um dies zu erleichtern, wurde ein Savitzky-Golay-Filter mit den Parameterpaaren (75, 5) und (25, 5) (jeweils in der Form (Fenstergröße, Grad des Polynoms)) eingesetzt, da bei direktem visuellen Vergleich zweier Testläufe die Graphen zusammengestaucht werden und daher verrauschter erscheinen. Der Einsatz eines Filters dient an dieser Stelle eine Einteilung des Graphen in verschiedene Segmente zu erleichtern.
+Ob die Verwendung eines Filters auch geeignet beziehungsweise notwendig ist, um Messrauschen aus den Daten zu entfernen, muss noch geprüft werden.
 
-tbd,  Gütemaß
 
 \subsection{Korrelation}
 %mit neuer Aufgabe, Erkennung von Modulen
@@ -20,21 +21,38 @@ tbd,  Gütemaß
 %  Zusammenfassung und Fazit
 \subsection{Evaluation der Methode}
 % Methode: Systemoptimierung durch instrumentiertes Schüttgut
+
+Es hat sich gezeigt, dass einzelne Segmente in den Daten erkennbar sind, die sich mit den einzelnen Modulen der Anlage korrelieren lassen. In Kombination mit dem beobachteten Verhalten des instrumentierten Schüttguts auf der Bahn, können diese beobachteten Daten auch auf das zu sortierende Schüttgut übertragen werden.
+%(Keine Ahnung, ob das Sinn ergibt) Dies bedeutet, dass wenn durch Anpassung verschiedenenr Bahnparameter (wie Geschwindigkeit und Intensität des Rüttlers) die durchschnittliche Dauer eines Testlaufs gesenkt werden kann, oder die Lage des Mikrocontrollers auf dem Band wo die Sortierung durch die Aktivierung der Druckluftdüsen vorgenommen wird ruhiger wird, dies auch für das zu sortierende Schüttgut gilt und der Prozess somit verbessert wurde. In jedem Fall liefern die gemessenen Daten einen besseren Einblick in die Bewegungen des Schüttguts in der Sortieranlage.
  
+% Was hier folgt hätte ich eher als Fazit, nicht als Evaluation der Methode verstanden.
 - Gewonnen Daten sind sehr inkonsistent
 - Noch keine optimalen Filterparameter gefunden
-- Mikrocontroller sind störanfällig (Lötstellen, Taktung des Prozessors, BLE-Verbindung)
+- Mikrocontroller sind störanfällig (Lötstellen, Taktung des Prozessors, BLE-Verbindung) (ist ja eigentlich nicht die Methode.
 
 - noch einige Erweiterungen, damit Segmente erkennbar
 
-FAZIT
+\subsection{Fazit}
+
+Wie sich herausgestellt hat, ist eine Bluetooth-Verbindung zu einem Mikrocontroller sehr viel störanfälliger als erwartet. Auch der Mikrocontroller selbst weißt noch Schwachstellen auf. So sind insbesondere die Lötverbindungen an den einzelnen Platinen sehr empfindlich. Auch die sehr unterschiedlich ausfallende Geschwindigkeit der Prozessoren ist ungünstig.
+
+%TODO etwas positives sollte hier noch stehen, aber ich bin gerade irgendwie ratlos.
 
 \subsection{Ausblick}
 
-%Punkte aus Präsentation
-Noch viele Erweiterungen/Änderungen möglich in
+Wie sich gezeigt hat, sind noch einige Erweiterungen und Optimierungen möglich. 
+Im Bereich des Mikrocontrollers könnte statt einer Bluetooth Verbindung eine Speicherkarte hinzugefügt werden, aus der die Daten am Laptop ausgelesen werden. Dies hätte den Vorteil, dass keine Daten durch Verbindungsabbrüche verloren gehen können. Allerdings würde dadurch auch die Kontrolle über den Mikrocontroller gemildert, da keine Befehle, wie zum Beispiel das Beginnen einer neuen Datei, mehr gesendet werden könnten. In diesem Fall müsste man entweder nach jedem Lauf die Daten aus dem Mikrocontroller auslesen, oder eine Segmentierungsmethode finden, um eine große Datei, die mehrere Testläufe enthält, in einzelne Dateien zu separieren, die dann jeweils nur noch einen Testlauf beinhalten.
+Unter Umständen ließe sich das Probleme der auftretenden Verbindungsabbrüchen lösen, indem ein anderes Funkmodul wie beispielsweise Wifi verwenden. Allerdings ist dabei nicht klar, wie sich die Metallwände des Flexsorts auf diese Verbindungsarten auswirkt. Dies müsste auch wieder experimentell bestimmt werden.
+Um eine größere Verlässlichkeit der Messungen zu erreichen und eventuell um das Verhalten der Schüttgüter untereinander besser zu beobachten, könnten parallele Messungen mit mehreren instrumentierten Schüttgütern vorgenommen werden. Dazu müsste entweder die App noch erweitert werden, dass Verbindungen zu mehreren Mikrocontrollern möglich sind, oder die Mikrocontroller mit internem Speicher ausgestattet werden, sodass keine Verbindung zum Speichern der Daten mehr notwendig ist.
+Auch bei der App sind noch Optimierungsmöglichkeiten beziehungsweise mögliche Erweiterungen vorhanden. Um die Auswertung am Laptop komfortabler zu gestalten, könnte eine direkte Übertragung an den Laptop hinzugefügt werden, sodass nicht der Umweg gegangen werden muss erst die Daten manuell vom Smartphone in einen Cloudspeicher zu übertragen und von dort manuell auf den Laptop.
+Schön anzusehen, aber nicht so wichtig, wäre ein Live-Graph, der die empfangenen Daten sofort in der App anzeigt.
+Beim Client wäre die wichtigste Erweiterung, der bereits erwähnte Klassifikator. Dabei bleibt noch zu evaluieren, ob ein supervised oder unsupervised Ansatz gewählt werden soll und welche Art von Klassifikator an sich geeignet ist. Sollte ein supervised Klassifikator gewählt werden, wäre für eine bessere Segmentierung eines Testlaufs in die einzelnen Module der Anlage, der Einsatz von RFID Schranken an den entsprechenden Übergängen nützlich. So wäre die Segmentierung deutlich präziser. Unabhänging davon, welcher Ansatz nun letztendlich verfolgt wird, sind einiges mehr an Testdaten erforderlich.
+Eine andere mögliche Erweiterung des Clients, ist eine Darstellung der Graphen oder auch eine Simulation, wie sich der Mikrocontroller im Raum bewegt hat, in 3D. Beides ist mit den gegebenen Möglichkeiten der verwendeten Pythonbibliothek sehr aufwändig. Gegebenenfalls gibt es dafür besser geeignete, oder es muss auf eine andere Programmiersprache ausgewichen werden.
 
-- Mikrocontroller: Datenlogging, andere Funkmodule, parallele Messungen (mehrere Kapseln)
-- Android App: Echtzeitanzeige, Datenspeicherung, Möglichkeit, Daten direkt an Laptop zu übertragen und auszuwerten
-- Client: Anzeige in 3D, UI-Steuerung, Automatisches Finden von ähnlichen Segmenten (Klassifikator)
+%Punkte aus Präsentation
+%Noch viele Erweiterungen/Änderungen möglich in
+
+%- Mikrocontroller: Datenlogging, andere Funkmodule, parallele Messungen (mehrere Kapseln)
+%- Android App: Echtzeitanzeige, Datenspeicherung, Möglichkeit, Daten direkt an Laptop zu übertragen und auszuwerten
+%- Client: Anzeige in 3D, UI-Steuerung, Automatisches Finden von ähnlichen Segmenten (Klassifikator)
 
