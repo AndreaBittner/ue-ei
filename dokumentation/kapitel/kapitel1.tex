@@ -1,32 +1,30 @@
 \section{Einleitung}
 
-Das Projekt basiert auf der FlexSort-Anlage, eine optische Bandsortieranlage für Schüttgut am Fraunhofer IOSB. Die Sortieranlage kann Schüttgut mit Hilfe einer Flächenkamera optisch klassifizieren und mittels Druckluftdüsen voneinander trennen. Damit eine konstante und gleichverteilte Menge von Schüttgut auf dem Band liegt, wird mittels Rüttler das Material freigegeben und rutscht über eine Rutsche auf das Band. Die nachfolgenden Abbildungen zeigen den Aufbau des FlexSorts.
+Das Projekt basiert auf der FlexSort-Anlage, eine optische Bandsortieranlage für Schüttgut am Fraunhofer IOSB. Die Sortieranlage kann Schüttgut mit Hilfe einer Flächenkamera optisch klassifizieren und mittels Druckluftdüsen voneinander trennen. Damit eine konstante und gleichverteilte Menge von Schüttgut auf dem Band liegt, wird mittels Rüttler das Material freigegeben und rutscht über eine Rutsche auf das Band. Die nachfolgenden Abbildungen \ref{fig:k1_flexsort1} bis \ref{fig:k1_flexsort3} zeigen den FlexSort.
 
-%\begin{figure}[htb]
-%	\centering
-%	\begin{minipage}[t]{0.49\linewidth}
-%		\centering
-%		\includegraphics[width=1\linewidth]{images/k4-polsterfolie.JPG}
-%		\caption{Variante 1: Kapsel in Polsterfolie eingepackt}
-%		\label{fig:k4_polsterfolie}
-%	\end{minipage}% <- sonst wird hier ein Leerzeichen eingefügt
-%	\hfill
-%	\begin{minipage}[t]{0.49\linewidth}
-%		\centering
-%		\includegraphics[width=\linewidth]{images/k4-fluegel.JPG}
-%		\caption{Beispielbild mit einer sehr langen Beschriftung, die nicht in eine Zeile hinein passt}
-%		\label{fig:k4_fluegel}
-%	\end{minipage}
-%\end{figure}
-%
-%\begin{figure}[htb]
-%	\centering
-%	\includegraphics[width=0.49\linewidth]{images/k4-kapsel.JPG}
-%	\caption{Beispielbild}
-%	\label{fig:k4_kapsel}
-%\end{figure}
+\begin{figure}[htb]
+	\centering
+	\begin{minipage}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1\linewidth]{images/k1-flexsort1.jpg}
+		\caption{FlexSort: Schüttgut fällt vom oberen Querrüttler auf kurzen Rüttler und rutscht dann auf das Sortierband}
+		\label{fig:k1_flexsort1}
+	\end{minipage}% <- sonst wird hier ein Leerzeichen eingefügt
+	\hfill
+	\begin{minipage}[t]{0.54\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/k1-flexsort2.jpg}
+		\caption{FlexSort: Sortierband mit optischer Objekterkennung und Druckluftdüsen zum Ausblasen}
+		\label{fig:k1_flexsort2}
+	\end{minipage}
+\end{figure}
 
-%TODO eigenes Bild, ansonsten korrekte Quellenangabe mit URL + Footnote
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/k1-flexsort3.jpg}
+	\caption{FlexSort: Außenansicht mit großem Rüttler und Förderbändern um Schüttgut für geschlossenen Messlauf wieder nach oben zu befördern}
+	\label{fig:k1_flexsort3}
+\end{figure}
 
 Da die Klassifizierung und das Ausblasen von Teilchen etwas verzögert stattfinden, ist eine zeitlich gut geplante Aktivierung der Druckluftdüsen notwendig, um die Anlage möglichst kostensparend und effizient zu betreiben. Hierfür muss die genaue Position der auszusortierenden Teilchen zum Zeitpunkt der Düsenüberquerung ermittelt werden. Dabei ist zu beachten, dass sich das Schüttgut vom Klassifizierungszeitpunkt bis zum Zeitpunkt des Ausblasens auf dem Band bewegt. Die Bewegung der Teilchen kann unter Umständen von einzelnen Parametern der Anlage beeinflusst werden und wirkt sich dadurch auf das Sortierergebnis aus. Beispielsweise kann die Geschwindigkeit des Bandes dazu führen, dass die Teilchen darauf springen oder der Rüttler durch ungünstige Vibrationsbewegungen keine konstante Menge von Teilchen über die Rutsche auf das Band frei gibt. 
 
