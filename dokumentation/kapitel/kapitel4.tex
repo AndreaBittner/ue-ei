@@ -19,7 +19,7 @@ Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüch
 
 Nach Optimierung der Android App konnten wieder Daten gemessen werden. Die Bluetooth-Verbindungsaufbau wurde verändert, sodass die Verbindung nun viel stabiler läuft. Pro Rundendurchgang wurde ein interner Zähler der App auf 0 gesetzt, um Runden im Datensatz identifizieren zu können. Zusätzlich wurde an immer gleichen Punkte in der Anlage die empfangen Daten zwischen gespeichert. Da damit eine neue Datei angelegt wurde, können auch einzelne Anlagenabschnitte ungefähr zugeordnet werden.
 
-Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt (Abbildung \ref{fig:k4_polsterfolie}). Da dadurch die Kapsel auf der Anlage langsamer als die Steine befördert wurde, wurden an die Verpackung noch drei Flügel, wie in Abbildung \ref{fig:k4_fluegel} zu sehen, angebracht. Dadurch sollen Steine die Kapsel besser mitnehmen können. Damit war die Kapsel ebenso schnell wie die Steine und lag auch auf den einzelnen Beförderungsmodulen sehr stabil (weniger Orientierungsänderungen). Zum Abschluss wurde die Kapsel ohne Verpackungsmaterial durch die Anlage geschickt (Abbildung \ref{fig:k4_kapsel}). Die Kapsel war hier ebenso schnell wie die Steine. Allerdings war hier zu beobachten, dass die Kapsel sich sehr viel drehte. 
+Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt (Abbildung \ref{fig:k4_polsterfolie}). Da dadurch die Kapsel auf der Anlage langsamer als die Steine befördert wurde, wurden an die Verpackung noch drei Flügel, wie in Abbildung \ref{fig:k4_fluegel} zu sehen, angebracht. Dadurch sollen Steine die Kapsel besser mitnehmen können. Damit war die Kapsel ebenso schnell wie die Steine und lag auch auf den einzelnen Beförderungsmodulen sehr stabil (weniger Orientierungsänderungen). Zum Abschluss wurde die Kapsel ohne Verpackungsmaterial durch die Anlage geschickt (Abbildung \ref{fig:k4_kapsel}). Die Kapsel war hier ebenso schnell wie die Steine. Allerdings war hier zu beobachten, dass die Kapsel sich stark um die Längsachse drehte. 
 
 In den letzten Dateien kam es zu Testfehlern, in der keine aktuellen Daten vom Sensormodul mehr gesendet wurden.
 
@@ -48,31 +48,28 @@ In den letzten Dateien kam es zu Testfehlern, in der keine aktuellen Daten vom S
 		\caption{Variante 3: Die unverpackte Kapsel in der Anlage}
 		\label{fig:k4_kapsel}
 	\end{minipage}% <- sonst wird hier ein Leerzeichen eingefügt
-	\hfill
-	\begin{minipage}[t]{0.49\linewidth}
-	\centering
-	\includegraphics[width=\linewidth]{images/k4-alu.JPG}
-	\caption{Variante 4: Die Kapsel ist in einen Alurahmen geklebt, um eine Kastenform zu erhalten}
-	\label{fig:k4_alu}
-	\end{minipage}
 \end{figure}
-
-\begin{figure}[htb]
-
-\end{figure}
-
-%TODO Bilder von den unterschiedlichen Kapselmessungen
 
 \subsection{Zweiter Messlauf}
 
-In einem weiteren Messlauf wurde noch einmal die Auswirkungen der Form des instrumentierten Schüttguts getestet. Dafür wurde wie in Abbildung \ref{fig:k4_alu} die Kapsel in einen viereckigen Alu-Rahmen  mit Duct Tape fixiert. Damit kann das Verhalten eines Schüttguts mit rechteckiger Form getestet werden. 
+In einem weiteren Messlauf wurde noch einmal die Auswirkungen der Form des instrumentierten Schüttguts getestet. Dafür wurde wie in Abbildung \ref{fig:k4_alu} und \ref{fig:k4_alurahmen} die Kapsel in einen viereckigen Alu-Rahmen  mit Duct Tape fixiert. Damit kann das Verhalten eines Schüttguts mit rechteckiger Form getestet werden. 
 
-%\begin{figure}[htb]
-%	\centering
-%	\includegraphics[width=0.5\linewidth]{images/k4-alu.JPG}
-%	\caption{Variante 4: Die Kapsel ist in einen Alurahmen geklebt, um eine Kastenform zu erhalten}
-%	\label{fig:k4_alu}
-%\end{figure}
+\begin{figure}[htb]
+	\centering
+	\begin{minipage}[t]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/k4-alu.JPG}
+		\caption{Variante 4: Die Kapsel ist in einen Alurahmen geklebt, um eine Kastenform zu erhalten}
+		\label{fig:k4_alu}
+	\end{minipage}% <- sonst wird hier ein Leerzeichen eingefügt
+	\hfill
+	\begin{minipage}[t]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/k4-alurahmen.jpg}
+		\caption{Variante 4: Die Kapsel wird mittels Duct Tape im Alurahmen fixiert}
+		\label{fig:k4_alurahmen}
+	\end{minipage}
+\end{figure}
 
 Nach fünf Testrunden und der Kontrolle der gespeicherten Datendateien musste leider festgestellt werden, dass vom Mikrocontroller fehlerhafte Sensorwerte geliefert wurden. Beim Ausweichen auf ein anderes instrumentieten Schüttgutes musste zunächst ein Kabel verlötet werden, das abgebrochen war. Dies zeigte, dass die Mikrocontroller nicht sehr robust sind, allerdings auf der Anlage auch starken Vibrationen und Erschütterungen ausgesetzt sind.
 
