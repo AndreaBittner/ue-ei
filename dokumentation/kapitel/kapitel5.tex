@@ -1,5 +1,5 @@
 \section{Auswertung}
-\subsection{Analyse}
+\subsection{Datenanalyse}
 Die gemessenen Daten des Beschleunigungssensors werden in $\dfrac{m}{s^{2}}$ 
 dargestellt, die Daten des Gyroskops in $\dfrac{\circ}{s}$.
 
@@ -9,7 +9,7 @@ Die Analyse wird durch zwei Faktoren erschwert:
 	\item Baulich bedingt dreht sich das Ei sehr leicht um die vertikale Achse, wodurch eine kurze Beschleunigung auf eine konstante Geschwindigkeit nicht als ein einzelner Ausschlag, sondern als eine Kombination verschiedener dargestellt wird und so kaum erkennbar ist.
 \end{enumerate}
 
-Da bisher noch kein Klassifikator existiert, wird die Auswertung von Hand ausgewertet. Um dies zu erleichtern, wurde ein Savitzky-Golay-Filter mit den Parameterpaaren (75, 5) und (25, 5) (jeweils in der Form (Fenstergröße, Grad des Polynoms)) eingesetzt, da bei direktem visuellen Vergleich zweier Testläufe die Graphen zusammengestaucht werden und daher verrauschter erscheinen. Der Einsatz eines Filters dient an dieser Stelle eine Einteilung des Graphen in verschiedene Segmente zu erleichtern.
+Da bisher noch kein Klassifikator existiert, wird die Auswertung von Hand ausgewertet. Um dies zu erleichtern, wurde ein Savitzky-Golay-Filter mit den Parameterpaaren %TODO (75, 5) und (25, 5) (jeweils in der Form (Fenstergröße, Grad des Polynoms)) eingesetzt, da bei direktem visuellen Vergleich zweier Testläufe die Graphen zusammengestaucht werden und daher verrauschter erscheinen. Der Einsatz eines Filters dient an dieser Stelle eine Einteilung des Graphen in verschiedene Segmente zu erleichtern.
 Ob die Verwendung eines Filters auch geeignet beziehungsweise notwendig ist, um Messrauschen aus den Daten zu entfernen, muss noch geprüft werden.
 
 
