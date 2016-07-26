@@ -1,6 +1,6 @@
 \subsection{Programmierung des Mikrocontrollers}
 \label{kapitel_programmierungMikrocontroller}
-
+ 
 \subsubsection{Benötigte Software}
 
 Zur Programmierung des Mikrocontrollers musste zunächst notwendige Software und Treiber geladen und installiert werden.
@@ -17,7 +17,7 @@ Für das Projekt wurde eine eigene Android-App entwickelt, die in Kapitel \ref{A
 
 \subsubsection{Programmieren des Mikrocontrollers}
 % setup, loop()
-Da der Adafruit Pro Trinket keinen seriellen Ausgabeport hat, wurde die Programmierung zuerst auf einen Arduino Uno geladen, der, wie auf der linken Seite der Abbildung \ref{fig:k3_prototyping} dargestellt, mittels eines Breadboards mit den Adafruit-Modulen verbunden war. Während der Programmierung konnte mittels \texttt{Serial.print()}-Befehlen der Programmablauf auf dem Mikrocontroller kontrolliert werden, bis er anschließend auf den Adafruit Pro Trinket übertragen wurde.
+Da der Adafruit Pro Trinket keinen seriellen Ausgabeport hat, wurde die Programmierung zuerst auf einen Arduino Uno geladen, der wie auf der linken Seite der Abbildung \ref{fig:k3_prototyping} mittels eines Breadboards mit den Adafruit-Modulen war. Während der Programmierung konnte mittels \texttt{Serial.print()}-Befehlen der Programmablauf auf dem Mikrocontroller kontrolliert werden, bis er anschließend auf den Adafruit Pro Trinket übertragen werden konnte.
 
 Das finale Programm besteht aus zwei Dateien. Nach dem ersten Testlauf wurden die App nochmals überarbeitet und auch die Android-App zum Datenempfang dazu angepasst. Die Datei \texttt{BluefruitConfig.h} beinhaltet die Festlegungen der verwendeten Pinouts des Mikrocontrollers zur Funktion. Der eigentliche Programmcode befinden sich in der \texttt{Program.ino}, die im nachfolgenden grob erklärt wird.
 

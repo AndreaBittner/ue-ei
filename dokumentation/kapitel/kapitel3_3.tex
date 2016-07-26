@@ -1,8 +1,7 @@
 \subsection{Empfangen der Messwerte}
-
+ 
 \subsubsection{BLE Clients mit Python}
 Für den Client wurde Python verwendet, da es zum einen leicht zu verwenden ist, zum anderen von Adafruit eine Bibliothek zum Verbindungsaufbau mit einem BLE Modul bereitgestellt wird. Durch die beigefügten Beispiele wäre der Verbindungsaufbau mit dem Laptop sehr einfach gewesen und eine Echtzeitdarstellung der ankommenden Daten möglich. Unklar war jedoch, dass es in dem benötigten Modul 'dbus' zu einem Attributeerror kommt. Da dieser nicht gelöst werden konnte, wurde eine Alternative entwickelt.
-%TODO
 
 \subsubsection{Alternativ Client zum Empfang der Daten per BLE: Android App}
 \label{AndroidAppFürDatenmessen}
@@ -16,17 +15,16 @@ Die App verfügt über vier Buttons, um das Verhalten des Mikrocontrollers sowie
 \begin{description}
 	\item[Start] Sendet einen Start-Befehl an den Mikrocontroller, damit dieser mit dem Senden von gemessenen Sensordaten beginnt
 	\item[Stop] Sendet einen Stop-Befehl an den Mikrocontroller, damit dieser mit dem Senden von gemessenen Sensordaten stoppt. Die gemessenen Daten bleiben dabei in einem String Buffer vorhanden
-	\item[Save] Speichert die gemessenen Daten in einem neuen File ab. Dabei werden genutzte Zähler nicht zurückgesetzt. Der Button kann benutzt werden, um bei einem Messlauf markante Punkte performant zu markieren, indem ein neues File erstellt wird.
+	\item[Save] Speichert die gemessenen Daten in einem neuen File ab. Dabei werden genutzte Zähler nicht zurückgesetzt. Der Button kann benutzt werden, um bei einem Messlauf markante Punkte auf der Anlage zu markieren, indem ein neues File erstellt wird. Zusätzlich wird die Performanz verbessert.
 	\item[Reset \& Save] Speichert die gemessenen Werte in ein File und setzt anschließen genutzte Zähler zurück. Zusätzlich wird ein Reset-Befehl an den Mikrocontroller gesendet, um die BLE-Verbindung neuzustarten und ebenfalls Zähler zurückzusetzen. Bei erfolgreicher Wiederverbindung, beginnt direkt wieder der Datenempfang, sofern der Mikrocontroller vorher auch im Senden-Modus war. Der Button kann benutzt werden, um bei einem Messlauf eine neue Runde auf der Anlage zu markieren, sowie eine gute Performanz zu behalten, indem gespeicherte Felder nicht zu groß werden.
 \end{description}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\textwidth]{images/k3-androidapp.png}
+	\includegraphics[width=0.45\textwidth]{images/k3-androidapp.png}
 	\caption {Android-App zum Steuern des Mikrocontrollers und Empfangen der Sensordaten}
 	\label{fig:k3_androidapp}
 \end{figure}
 
-Die Daten werden in Dateien lokal auf dem Smartphone gespeichert und müssen anschließend auf einen Rechner übertragen werden. Derzeit ist dieser Speicherort der ,,Download''-Ordner des Smartphones. Hier gibt es sicher noch Potential für Verbesserungen. Beispielsweise können die Daten direkt über einen Data Service an einen PC oder Laptop weitergeleitet werden oder zumindest der Speicherort variabel ist. \\
-Abgelegt werden die Files mit einem bestimmten Namensformat. Sie beginnen mit dem aktuellen Timestamp um identische Filenamen zu verhinden. Zusätzlich wird noch der Bereich %TODO welcher Bereich? ist nicht ganz eindeutig 
- mittels eines internen App-Zählers angegeben, um zusammenhängende Dateien für eine Messrunde identifizieren zu können.
+Die Daten werden in Dateien lokal auf dem Smartphone gespeichert und müssen anschließend auf einen Rechner übertragen werden. Derzeit ist der ,,Download''-Ordner des Smartphones fest implementiert. Hier gibt es sicher noch Potential zur Erweiterung, indem die Daten direkt über einen Data Service an einen PC oder Laptop weitergeleitet werden könnten oder zumindest der Speicherort variabler wird. \\
+Abgelegt werden die Files in einem bestimmten Namensformat. Sie beginnen mit dem aktuellen Timestamp um identische Filenamen zu verhinden. Zusätzlich wird noch der Bereich mittels eines internen App-Zählers angegeben, um zusammenhängende Dateien für eine Messrunde identifizieren zu können.
