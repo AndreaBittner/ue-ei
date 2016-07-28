@@ -9,6 +9,7 @@
 
 1. dokumentation: 
   * [Latex-Dokumentation](dokumentation) des Projektes
+  * [Finale PDF-Dokumentation](dokumentation/Praktikumsdokumentation_Bittner_Kucza.pdf)
 
 2. client:
  * [Android App](client/adafruit_android_ble_uart_extended/), BLE-Verbindung zwischen Smartphone und Adafruit Pro Trinket, Empfangen und Speichern der gemessenen Daten
