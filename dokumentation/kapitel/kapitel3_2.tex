@@ -3,7 +3,7 @@
  
 \subsubsection{Benötigte Software}
 
-Zur Programmierung des Mikrocontrollers mussten zuerst notwendige Software und Treiber geladen und installiert werden.
+Folgende Software und Treiber mussten zur Programmierung des Mikrocontrollers installiert werden.
 
 \begin{description}
 	\item[Entwicklungsumgebung:] Arduino IDE (1.6.8), für die Programmierung des Arduino Chip ATmega328, der auf dem Adafruit Pro Trinket verbaut ist
@@ -15,13 +15,13 @@ Adafruit stellt außerdem über Google Play die Android-App ,,Adafruit Bluefruit
 
 Für das Projekt wurde eine eigene Android-App entwickelt, die in Kapitel \ref{AndroidAppFürDatenmessen} beschrieben wird.
 
-\subsubsection{Programmieren des Mikrocontrollers}
+\subsubsection{Programmierung des Mikrocontrollers}
 % setup, loop()
 Da der Adafruit Pro Trinket keinen seriellen Ausgabeport hat, wurde die Programmierung zuerst auf einen Arduino Uno geladen, der wie auf der linken Seite der Abbildung \ref{fig:k3_prototyping} mittels eines Breadboards mit den Adafruit-Modulen verbunden war. Während der Programmierung konnte mit \texttt{Serial.print()}-Befehlen der Programmablauf auf dem Mikrocontroller kontrolliert werden, bis er anschließend mit dem gewünschten Verhalten auf den Adafruit Pro Trinket übertragen werden konnte.
 
-Das finale Programm besteht aus zwei Dateien. Nach dem ersten Testlauf wurde der Programmcode des Mikrocontrollers nochmals überarbeitet und auch die Android-App zum Datenempfang (siehe Kapitel \ref{AndroidAppFürDatenmessen}) dazu angepasst. Die Datei \texttt{BluefruitConfig.h} beinhaltet die Belegungen der verwendeten Pinouts des Mikrocontrollers zu den funktionalen Anschlüssen der anderen Modulen. Der eigentliche Programmcode befinden sich in der \texttt{Program.ino}, die im nachfolgenden grob erklärt wird.
+Nach dem ersten Testlauf wurde der Programmcode des Mikrocontrollers nochmals überarbeitet und auch die Android-App zum Datenempfang (siehe Kapitel \ref{AndroidAppFürDatenmessen}) dazu angepasst. Die Datei \texttt{BluefruitConfig.h} beinhaltet die Belegungen der verwendeten Pinouts des Mikrocontrollers zu den funktionalen Anschlüssen der anderen Modulen. Der eigentliche Programmcode befinden sich in der Datei \texttt{Program.ino}, die im nachfolgenden grob erklärt wird.
 
-Zunächst werden Bibliotheken für die Adafruit Module eingebunden, sowie eine Instanz erstellt, die eine Bluetooth Low Energy-Verbindung aufbaut. Nun gibt es eine \texttt{Setup()}-Funktion, die nur einmal beim Start des Mikrocontrollers aufgerufen wird. Hier wird eine Bluetooth-Verbindung mit einem Smartphone hergestellt und die Sensoren initialisiert. Danach folgt die \texttt{Loop()}-Funktion, die wiederholt aufgerufen wird. Da diese auch auf die gesendeten Befehle der Android-App reagieren muss, wird der Ablauf der Funktion mittels Struktogramm in Abbildung \ref{fig:k3_loopstructo} veranschaulicht.
+Zunächst werden Bibliotheken für die Adafruit Module eingebunden, sowie eine BLE-Instanz erstellt, die eine Bluetooth Low Energy-Verbindung aufbaut. Außerdem gibt es eine \texttt{Setup()}-Funktion, die nur einmal beim Start des Mikrocontrollers aufgerufen wird. Hier wird eine Bluetooth-Verbindung mit einem Smartphone hergestellt und die Sensoren initialisiert. Danach folgt die \texttt{Loop()}-Funktion, die wiederholt aufgerufen wird. Da diese auch auf die gesendeten Befehle der Android-App reagieren muss, wird der Ablauf der Funktion mittels Struktogramm in Abbildung \ref{fig:k3_loopstructo} veranschaulicht.
 
 \begin{figure}[h]
 	\centering
@@ -30,5 +30,5 @@ Zunächst werden Bibliotheken für die Adafruit Module eingebunden, sowie eine I
 	\label{fig:k3_loopstructo}
 \end{figure}
 
-Besteht keine BLE-Verbindung, wartet der Mikrocontroller 1000ms bis er wieder mit dem erneuten Aufruf der Funktion \texttt{Loop()} beginnt. Bei bestehender Verbindung werden zunächst eventuell empfangene Befehle der Android-App ausgewertet. Sollen Daten gesendet werden (\texttt{sending-Mode = on}), wird mit dem Auslesen der Sensor-Werte und dem Senden dieser per BLE fortgefahren. 
+Besteht keine BLE-Verbindung, wartet der Mikrocontroller 1000ms bis er wieder mit dem erneuten Aufruf der Funktion \texttt{Loop()} beginnt. Bei bestehender Verbindung werden zunächst eventuell empfangene Befehle der Android-App ausgewertet. Durch \texttt{delay(60)} wartet der Mikrocontroller 60 Millisekunden. Diese Pause ist notwendig, da es ansonsten zu Problemen beim Auswerten des eingehenden Befehls kommt, speziell wenn die BLE-Verbindung zurückgesetzt wird. Sollen Daten gesendet werden (\texttt{sending-Mode = on}), wird mit dem Auslesen der Sensor-Werte und dem Senden dieser per BLE fortgefahren. 
 

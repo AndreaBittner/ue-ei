@@ -22,18 +22,18 @@ Allgemeine Anforderungen an das instrumentierte Schüttgut:
 	\label{fig:k3}
 \end{figure}
 
-Die Beschaffung der Bauteile sollte zudem möglichst einfach sein. Von Vorteil ist, wenn alle Bauteile von einem deutschen Händler bezogen werden könnten, um einerseits nur einen einzelnen Liefervorgang zu haben und andrerseits eine geringere Lieferzeit (anstatt international). Auch eine ausreichende Dokumentation der einzelnen Module ist sehr nützlich für eine schnelle Implementierung des Mikrocontroller-Codes. Die einzelnen Module müssen kompatibel zueinander sein.
+Die Beschaffung der Bauteile sollte zudem möglichst einfach sein. Von Vorteil ist, wenn alle Bauteile von einem deutschen Händler bezogen werden können, um einerseits nur einen einzelnen Liefervorgang zu haben und andrerseits eine geringere Lieferzeit (anstatt international). Auch eine ausreichende Dokumentation der einzelnen Module für eine schnelle Implementierung des Mikrocontroller-Codes ist sehr nützlich. Die einzelnen Module müssen kompatibel zueinander sein.
 
 \subsubsection{Recherche}
-Begonnen wurde mit einer Recherche, welche Bauteile es gibt, mit denen sich solch ein instrumentiertes Schüttgut erstellen lässt. Als Hauptplatine wird ein Mikrocontroller benötigt, an dem weitere Bauteile angeschlossen werden können. Es gibt einzelne Sensormodule, die z.B. Orientierung und Beschleunigung in je 3 Achsen gleichzeitig messen können. Ebenso gibt es verschiedene Speicher- und Übertragungsmodule, die Daten auf eine SD-Karte loggen oder per Bluetooth / WLAN / ZigBee weiterleiten können. Ausschlaggebend bei der Wahl der einzelnen Module war zunächst die Größe der einzelnen Bauteile, die selbst die Größe eines Ü-Eis nicht übersteigen dürfen. Nach der Wahl eines passenden Mikrocontrollers müssen auch die Anschlussmöglichkeiten für weitere Module mit beachtet werden.
+Begonnen wurde mit einer Recherche nach Bauteilen, mit denen sich solch ein instrumentiertes Schüttgut bauen lässt. Als Hauptplatine wird ein Mikrocontroller benötigt, an dem weitere Bauteile angeschlossen werden können. Es gibt einzelne Sensormodule, die z.B. Orientierung und Beschleunigung in je 3 Achsen gleichzeitig messen können. Ebenso gibt es verschiedene Speicher- und Übertragungsmodule, die Daten auf eine SD-Karte loggen oder per Bluetooth / WLAN / ZigBee weiterleiten können. Ausschlaggebend bei der Wahl der einzelnen Module war zunächst die Größe der einzelnen Bauteile, die die Größe eines Ü-Eis nicht übersteigen dürfen. Nach der Wahl eines passenden Mikrocontrollers müssen auch die Anschlussmöglichkeiten für weitere Module beachtet werden.
 
 \textbf{Mikrocontroller}, Gewähltes Bauteil: Adafruit Pro Trinket 3V 12MHz
 
-Der Pro Trinket 3V 12MHz von Adafruit besitzt einen leistungsstarken ATmega328-Chip, der auch auf einigen Arduino-Mikrocontrollern verwendet wird. Er besitzt einen Speicher von 28K und einen RAM von 2K. Vorteile sind bei diesem, dass er mit 18 GPIOs (General Purpose Input Output) und 2 analogen Anschlüssen weitaus mehr Anschlussmöglichkeiten bietet, als beispielsweise der Arduino Pro Mini. Die Maße des Boards sind  38mm x 18mm x 4mm, sodass die Platine ausreichend Platz in der Kapsel haben sollte. Auf dem Trinket ist ein USB Bootloader vorinstalliert, sodass der Mikrocontroller per USB programmiert werden kann. (Quelle: \url{https://www.adafruit.com/products/2010}, 12.05.2016)
+Das Pro Trinket 3V 12MHz von Adafruit besitzt einen ATmega328-Chip, der auch auf einigen Arduino-Mikrocontrollern verwendet wird. Er besitzt einen Speicher von 28KB und einen RAM von 2KB. Ein Vorteil ist außerdem, dass er mit 18 GPIOs (General Purpose Input Output) und 2 analogen Anschlüssen weitaus mehr Anschlussmöglichkeiten bietet, als beispielsweise der Arduino Pro Mini. Die Maße des Boards sind  38mm x 18mm x 4mm, sodass die Platine ausreichend Platz in der Kapsel haben sollte. Auf dem Trinket ist ein USB Bootloader vorinstalliert, sodass der Mikrocontroller per USB programmiert werden kann. (Quelle: \url{https://www.adafruit.com/products/2010}, 12.05.2016)
 
 \textbf{Aufnahme von Bewegungsdaten}, Gewähltes Bauteil: Adafruit 9-DOF IMU Breakout - L3GD20H + LSM303
 
-Das Modul L3GD20H kann drei verschiedene Datentypen in jeweils drei Achsen messen: Beschleunigungsdaten, Rotationsdaten und Magnetische Daten ähnlich zu einem Kompass. Da Beschleunigungs- und Gyroskopdaten gemessen werden sollen, ist ein Bauteil, dass beide Daten zusammen liefern kann, sehr platzeffizient. Die Kommunikation zwischen dem Mikrocontroller und dem Datensensor benutzt das I2C-Protokoll. Das Bauteil hat die Maße 38mm x 23mm und ist damit um 5 Millimeter breiter als der Mikrocontroller Pro Trinket. (Quelle: \url{https://www.adafruit.com/products/1714}, 12.05.2016)
+Das Modul L3GD20H kann drei verschiedene Daten in jeweils drei Achsen messen: Beschleunigungsdaten, Rotationsdaten und Magnetische Daten ähnlich zu einem Kompass. Da Beschleunigungs- und Gyroskopdaten gemessen werden sollen, ist ein Bauteil, das beide Daten zusammen liefern kann, sehr platzeffizient. Für die Kommunikation zwischen dem Mikrocontroller und dem Datensensor wird das I2C-Protokoll benutzt. Das Bauteil hat die Maße 38mm x 23mm und ist damit um 5 Millimeter breiter als der Mikrocontroller Pro Trinket. (Quelle: \url{https://www.adafruit.com/products/1714}, 12.05.2016)
 
 \textbf{Übertragung der Daten}
 
@@ -46,14 +46,14 @@ Zur möglichst schnellen Übertragung von Daten an den PC soll eine drahtlose Ve
 
 Gewähltes Bauteil: Adafruit Bluefruit LE SPI Friend - Bluetooth Low Energy (BLE)
 
-Gewählt wurde das Adafruit Bluefruit LE SPI Friend, das durch Bluetooth Low Energy sehr energiearm sein soll. Zur Kommunikation mit dem Mikrocontroller wird das Protokoll SPI benutzt. Mit den Maßen 23mm x 26mm x 5mm ist es dicker als die anderen Bauteile, aufgrund der geringeren Breite sollte das Bauteil dennoch in der Rundung des Ü-Eis Platz finden. Das Modul hat außerdem einen Speicherplatz von 256KB. (Quelle: \url{https://www.adafruit.com/products/2633}, 12.05.2016)
+Gewählt wurde das Adafruit Bluefruit LE SPI Friend, das durch Bluetooth Low Energy einen optimierten Energieverbrauch hat. Zur Kommunikation mit dem Mikrocontroller wird das Protokoll SPI benutzt. Mit den Maßen 23mm x 26mm x 5mm ist es dicker als die anderen Bauteile, aufgrund der geringeren Breite sollte das Bauteil dennoch in der Rundung des Ü-Eis Platz finden. Das Modul hat außerdem einen Speicherplatz von 256KB. (Quelle: \url{https://www.adafruit.com/products/2633}, 12.05.2016)
 
 \textbf{Betrieb durch interne Batterie}, Gewählte Bauteile: Adafruit Pro Trinket LiIon/LiPoly Backpack Add-On, Lithium Ion Polymer Battery - 3.7V 150mAh
 
 Um einen universellen Einsatz des instrumentierten Schüttguts zu garantieren, muss es mit einer eigenen Batterie oder einem eigenen Akkumulator betrieben werden. 
-Mit dem Adafruit Trinket Lilon Backpack Add-On lässt sich ein Akkumulator an das Pro Trinket anschließen. Das Add-On dient als Ladestation, wenn das Pro Trinket per USB mit einem Rechner verbunden ist. Sobald der USB-Port entfernt wird, schaltet das Modul automatisch in den batteriebetriebenen Modus. Das Modul hat eine Größe von 15mm x 17mm x 7mm. Die relativ große Höhe im Vergleich zu den anderen Modulen kommt durch den Anschluss für den Akkumulator zustande. (Quelle: \url{https://www.adafruit.com/products/2124}, 12.05.2016)
+Mit dem Adafruit Trinket Lilon Backpack Add-On lässt sich ein Akkumulator an das Pro Trinket anschließen. Das Add-On dient als Ladestation, wenn das Pro Trinket per USB mit einem Rechner verbunden ist. Sobald das USB-Kabel entfernt wird, schaltet das Modul automatisch in den batteriebetriebenen Modus. Das Modul hat eine Größe von 15mm x 17mm x 7mm. Die relativ große Höhe im Vergleich zu den anderen Modulen kommt durch den Anschluss für den Akkumulator zustande. (Quelle: \url{https://www.adafruit.com/products/2124}, 12.05.2016)
 
-Hinzu kommt eine Lithium Ion Polymer Batterie mit 3,7V und 150mAh. Dieser Akku wurde aufgrund der geringen Größe von 19,75mm x 26mm x 3,8mm gewählt. Es gibt auch Modelle mit mehr Kapazität, die aber andere Abmessungen besitzen. Zum Teil geht die Länge über 30mm hinaus. Es werden allerdings schon Bauteile über diese Länge verwendet, die in der vertikalen Achse der Kapsel platziert werden müssen. Der Akku sollte daher näher an der Aussenwand positioniert werden, wo die Höhe durch die Abrundung der Kapsel jedoch eingeschränkt wird. (Quelle: \url{https://www.adafruit.com/products/1317}, 12.05.2016)
+Hinzu kommt eine Lithium Ion Polymer Batterie mit 3,7V und 150mAh. Dieser Akku wurde aufgrund der geringen Größe von 19,75mm x 26mm x 3,8mm gewählt. Es gibt auch Modelle mit mehr Kapazität, die aber andere Abmessungen besitzen. Zum Teil geht die Länge über 30mm hinaus. Es werden allerdings schon Bauteile über diese Länge verwendet, die in der vertikalen Achse der Kapsel platziert werden müssen. Der Akku sollte daher näher an der Außenwand positioniert werden, wo die Höhe durch die Abrundung der Kapsel jedoch eingeschränkt wird. (Quelle: \url{https://www.adafruit.com/products/1317}, 12.05.2016)
 
 \textbf{Alternative Überlegungen zum Cachen der Daten}
 
@@ -89,7 +89,7 @@ Die gewählten Bauteile für das instrumentierte Schüttgut (siehe Tabelle \ref{
 		\label{tab:bestellteHW}
 \end{table}
 
-\textsuperscript{*)} Aufgrund von der Nichtverfügbarkeit des gewünschten Akkus bei einem Lieferanten musste ein anderer Akku gewählt werden. Dadurch konnte die Bestellung aber bei nur einem Lieferanten getätigt und eine kurze Lieferzeit erreicht werden.
+\textsuperscript{*)} Aufgrund der Nichtverfügbarkeit des gewünschten Akkus bei einem Lieferanten musste ein anderer Akku gewählt werden. Dadurch konnte die Bestellung aber bei nur einem Lieferanten getätigt und eine kurze Lieferzeit erreicht werden.
 
 \begin{table}[h]
 	\centering
@@ -126,7 +126,7 @@ Wie in Abbildung \ref{fig:k3_machbarkeitsstudie} ersichtlich wird, passen alle M
 	\label{fig:k3_machbarkeitsstudie}
 \end{figure}
 
-Die Wiring-Skizze in Abbildung \ref{fig:k3_wiringskizze} zeigt die Verbindungen der einzelnen Module untereinander. Diese ist nicht maßstabsgetreu. Ziel war es, alle Module korrekt miteinander verbinden zu können. Damit konnten auch schon erste Überlegungen angestellt werden, wie die Module später auch in der Kapsel angeordnet werden könnten. Letztendlich wird die Skizze auch hilfreich beim Löten sein.
+Die Wiring-Skizze in Abbildung \ref{fig:k3_wiringskizze} zeigt die Verbindungen der einzelnen Module untereinander. Diese ist nicht maßstabsgetreu. Ziel war es, alle Module korrekt miteinander verbinden zu können. Damit konnten auch schon erste Überlegungen angestellt werden, wie die Module später in der Kapsel angeordnet werden könnten. Letztendlich wird die Skizze auch hilfreich beim Löten sein.
 
 \begin{figure}[h]
 	\centering
@@ -140,7 +140,7 @@ Nach positiven Ergebnissen aus den Machbarkeitsstudien wurden die Bauteile wie s
 
 \subsubsection{Prototyping}
 
-Für einen ersten Prototypen wurden die Bauteile mit Hilfe eines Breadboards und Steckkabeln wie in Abbildung \ref{fig:k3_prototyping} miteinander verbunden. Zuerst wurden die Pro Trinkets getestet. Hier ist leider ein Defekt eines Pro Trinkets aufgefallen. Anschließend wurde das Bluetooth-Modul und zum Schluss das Sensor-Modul hinzugefügt.
+Für einen ersten Prototypen wurden die Bauteile mit Hilfe eines Breadboards und Steckkabeln, wie in Abbildung \ref{fig:k3_prototyping} zu sehen, miteinander verbunden. Zuerst wurden die Pro Trinkets getestet. Hier ist leider ein Defekt eines Pro Trinkets aufgefallen. Anschließend wurde das Bluetooth-Modul und zum Schluss das Sensor-Modul hinzugefügt.
 
 \begin{figure}[h]
 	\centering
@@ -149,8 +149,7 @@ Für einen ersten Prototypen wurden die Bauteile mit Hilfe eines Breadboards und
 	\label{fig:k3_prototyping}
 \end{figure}
 
-An dieser Stelle wurde außer dem Adafruit Pro Trinket noch ein Arduino Uno hinzugenommen, um während der Programmierung des Mikrocontrollers (siehe Kapitel \ref{kapitel_programmierungMikrocontroller}) auch mit einer seriellen Ausgabe testen zu können. Bei erfolgreichem Testen des Programmcodes wurde dieser dann auf den Adafruit Pro Trinket übertragen.
-%Erwähnen warum Uno schon vorher?
+An dieser Stelle wurde außer dem Adafruit Pro Trinket noch ein Arduino Uno zur Hilfe genommen, um während der Programmierung des Mikrocontrollers (siehe Kapitel \ref{kapitel_programmierungMikrocontroller}) auch mit einer seriellen Ausgabe testen zu können. Nach erfolgreichem Testen des Programmcodes wurde dieser auf den Adafruit Pro Trinket übertragen.
 
 \subsubsection{Löten}
 

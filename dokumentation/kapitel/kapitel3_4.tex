@@ -1,9 +1,9 @@
 \subsection{Client zur Datenanalyse}
 
-Der Client ist in Python entwickelt, da zum Zeitpunkt, als die Probleme mit der BLE-Bibliothek (Kapitel \ref{BLE_Python_Client}) auftraten, bereits große Teile der Datenanalyse implementiert waren. Zudem ist Python leicht erlernbar und bietet gute Bibliotheken für eine Vielfalt von Anwendungsfällen.
+Der Client zur Datenanalyse wurde in Python entwickelt, da Python leicht erlernbar ist und gute Bibliotheken für eine Vielfalt von Anwendungsfällen bietet.
 \subsubsection{Graphisches User Interface}
 Für die Darstellung graphischer Bedienelemente im Client wurde die Library \texttt{PyQt4} verwendet, die eine leichte Integration der Sensordaten als Graphen ermöglicht. Diese werden mit Hilfe einer anderen Bibliothek erzeugt, können aber als ein sogenanntes Widget leicht in die GUI integriert werden.
-Da keine Echtzeitübertragung der Daten möglich ist, werden nur wenige Bedienelemente, welche in einer Menuleiste untergebracht sind, benötigt:
+Da keine Echtzeitübertragung der Daten realisiert wurde, werden nur wenige Bedienelemente, welche in einer Menüleiste untergebracht sind, benötigt:
 \begin{itemize}
 \item Öffnen einer Datei mit Messwerten
 \item Anzeigen von Statistiken über den Messlauf (Dauer des Messlaufs, gemessene minimal und maximal Werte)
@@ -12,7 +12,7 @@ Da keine Echtzeitübertragung der Daten möglich ist, werden nur wenige Bedienel
 \end{itemize}
 Werden vom Nutzer ungültige Eingaben gemacht, wird ihm dieser Fehler durch Dialogfenster mitgeteilt. 
 \subsubsection{Datenformat}
-Um alle weiteren Verarbeitungsschritte zu erleichtern wird vorab ein festes Format der Datentupel (Abbildung \ref{fig:k3-datenformat.png}) definiert. Die ausgelesenen Sensordaten werden in diesem Format zusammen mit einem Zeitstempel, einer fortlaufenden Nummer und einer ID, welches den verwendeten Mikrocontroller identifiziert, gesendet.
+Um alle weiteren Verarbeitungsschritte zu erleichtern, wird vorab ein festes Format der Datentupel (Abbildung \ref{fig:k3-datenformat.png}) definiert. Die ausgelesenen Sensordaten werden in diesem Format zusammen mit einem Zeitstempel, einer fortlaufenden Nummer und einer ID, welches den verwendeten Mikrocontroller identifiziert, gesendet.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{images/k3-datenformat.png}
@@ -22,10 +22,10 @@ Um alle weiteren Verarbeitungsschritte zu erleichtern wird vorab ein festes Form
 \subsubsection{Parser}
 Der Parser operiert auf dem oben beschriebenen Datenformat und hat zwei Hauptaufgaben:
 \begin{itemize}
- \item Bereinigen der Daten, falls unvollständige oder inkorrekte Tupel ankommen
+ \item Bereinigen der Daten, falls unvollständige oder inkorrekte Tupel vorkommen
  \item Aufteilen der Daten in Arrays, welche dann als Graph dargestellt werden können
 \end{itemize}
-Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellung and die Klasse \texttt{Plotter} übergeben werden. Die ersten drei Listen enthalten die Daten der drei Gyroskop-Achsen, die letzen drei Listen die Daten der Achsen des Beschleunigungssensors. Da für die Werte der x-Achse die Zeitstempel verwendet werden, enthalten diese Listen jeweils Tupel der Form \texttt{(Zeitstempel, gemessener Wert)}.
+Durch Eingabe einer Datendatei werden sechs Listen erzeugt, welche zur Darstellung an die Klasse \texttt{Plotter} übergeben werden. Die ersten drei Listen enthalten die Daten der drei Gyroskop-Achsen, die letzten drei Listen die Daten der Achsen des Beschleunigungssensors. Da für die Werte der x-Achse die Zeitstempel verwendet werden, enthalten diese Listen jeweils Tupel der Form \texttt{(Zeitstempel, gemessener Wert)}.
 \subsubsection{Darstellen von Daten}
 Das Erzeugen der Graphen erfolgt in der Klasse \texttt{Plotter}, welche die Bibliotheken \texttt{numpy} und \texttt{pyqtgraph} verwendet. Für den Filter wird zudem noch die Bibliothek \texttt{scipy} benötigt. Durch \texttt{pyqtgraph} wird ein \texttt{PlotWidget} erzeugt, welches genau einen Graphen beinhaltet, der entweder die Werte der drei Achsen des Gyroskops oder des Beschleunigungssensors darstellt. Die y-Achse ist in der Einheit $\circ(Grad)/s$ bei ersterem Graph und $m/s^{2}$ bei letzterem. Die x-Achse ist in beiden Graphen der Zeitstempel des Datentupels. In Abbildung \ref{fig:k3_4-graph.png} ist ein solcher Graph beispielhaft dargestellt.
 \begin{figure}[h]
@@ -36,8 +36,8 @@ Das Erzeugen der Graphen erfolgt in der Klasse \texttt{Plotter}, welche die Bibl
 \end{figure}
 
 Ein \texttt{PlotWidget} enthält ein \texttt{PlotItem}, welches eine Menge von \texttt{PlotDataItems} enthält, d.h. eine Menge von gemessenen Datenpunkten.
-Für jeden der beiden Graphen wird dann in der Klasse \texttt{Presenter} eine Instanz der Klasse \texttt{Plotter} erzeugt und zu einer \texttt{QVBoxLayout} hinzugefügt. Diese dient dazu, die einzelnen enthaltenen Widgets relativ zueinander anzuordnen.
-Damit die Graphen unabhängig der Anzahl der enthaltenen Datenpunkte gleichgroß dargestellt werden, wird die Größe des Fensters für jeden Graphen neu berechnet. Übersteigt die Größe des Graphen die Größe des Fensters, wird automatisch die horizontale Scrollbar angepasst.
+Für jeden der beiden Graphen wird in der Klasse \texttt{Presenter} eine Instanz der Klasse \texttt{Plotter} erzeugt und zu einer \texttt{QVBoxLayout} hinzugefügt. Diese dient dazu, die einzelnen enthaltenen Widgets relativ zueinander anzuordnen.
+Damit die Graphen unabhängig von der Anzahl der enthaltenen Datenpunkte gleich groß dargestellt werden, wird die Größe des Fensters für jeden Graphen neu berechnet. Übersteigt die Größe des Graphen die Größe des Fensters, wird automatisch die horizontale Scrollbar angepasst.
 \subsubsection{Datenaufbereitung}
 Durch verschiedene äußere Bedingungen (z.B. Empfindlichkeit des Sensors oder Vibration der Bahn) werden die gemessenen Rohdaten verfälscht. Durch Anwendung von Filtern können die Daten nachträglich überarbeitet werden.
 Hierbei wurden zwei Ansätze betrachtet, aber nur einer implementiert:
@@ -54,6 +54,6 @@ Das Kalman-Filter zieht im Gegensatz zum Savitzky-Golay-Filter zwei verschiedene
 \item Prozessrauschen 
 \item Sensorrauschen
 \end{itemize}
-Die Wahl und Beschreibung des zu Grunde liegenden Systems ist jedoch entscheidend für die Parameterwahl. Ist das System nur unzureichend bekannt und wird deshalb schlecht beschrieben, ist der Filter nicht mehr als ein Tiefpass und wird keine guten Ergebnisse liefern. Aufgrund fehlender Erfahrungswerte in der Anwendung dieses Filters, wurde dieser Ansatz bereits nach kurzer Zeit verworfen.
+Die Wahl und Beschreibung des zugrunde liegenden Systems ist jedoch entscheidend für die Parameterwahl. Ist das System nur unzureichend bekannt und wird deshalb schlecht beschrieben, ist der Filter nicht mehr als ein Tiefpass und wird keine guten Ergebnisse liefern. Aufgrund fehlender Erfahrungswerte in der Anwendung dieses Filters, wurde dieser Ansatz verworfen.
 
 Die Wahl der richtigen Parameter ist beim Einsatz von Filtern entscheidend. Diese haben großen Einfluss auf die Form des resultierenden Graphen. Das macht sie aber auch besonders problematisch, da sie meist nur experimentell ermittelt werden können und es ist nicht immer ersichtlich, wie weit die Graphen tatsächlich geglättet werden müssen, um ein verwertbares Ergebnis zu erhalten. 
