@@ -1,15 +1,15 @@
 \section{Datenmessung}
  
 \subsection{Erkenntnisse aus dem ersten Testlauf}
-Nach dem ersten Testlauf mit der Android-App und dem Bauteil konnten neue wichtige Erkenntnisse gewonnen werden.
-Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüchen. In der App gibt es noch einige Unstimmigkeiten, die behoben werden sollten, damit verwertbare Daten aufgezeichnet werden können. 
+Nach dem ersten Testlauf mit der Android-App und dem instrumentierten Schüttgut konnten neue wichtige Erkenntnisse gewonnen werden.
+Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüchen. In der App gibt es noch einige Unstimmigkeiten, die behoben werden sollten, damit verwertbare Daten aufgezeichnet werden können: 
 
 \begin{itemize}
-	\item Es muss einen fortlaufenden Zähler vom Mikrocontroller aus geben, damit nach einem Verbindungsabbruch und -wiederaufbau der Zähler mitten im Durchlauf nicht auch wieder bei 0 beginnt
+	\item Es muss einen fortlaufenden Zähler vom Mikrocontroller geben, damit nach einem Verbindungsabbruch und -wiederaufbau der Zähler mitten im Messlauf weiterläuft und nicht durch eine Zurücksetzung fälschlicherweise eine neue Testrunde  markiert
 	\item Beheben eines Bugs beim Datenaufzeichnen nach dem ersten Verbindungsabbruch
-	\item Der Zugriff auf die UI-Elemente ist zu hoch. Die Ausgabe auf die UI ist langsamer, als die eingehenden Daten, weshalb die App ab vielen Ausgaben eingefroren ist. Ab dann konnten bisher empfangene Daten auch nicht mehr gespeichert werden
+	\item Der Zugriff auf die UI-Elemente ist zu hoch. Die Ausgabe auf die UI ist langsamer, als die eingehenden Daten ankommen, weshalb die App ab zu vielen Ausgaben eingefroren ist. Ab dann konnten bisher empfangene Daten auch nicht mehr gespeichert werden
 	\item Das Speichern sollte performanter sein
-	\item Wie lässt sich ein Rundendurchlauf bzw einzelne markante Punkte in der Anlage währen der Datenaufzeichnung markieren, um nachträglich die analysierten Daten evaluieren zu lassen?
+	\item Wie lässt sich ein Rundendurchlauf bzw einzelne markante Punkte in der Anlage währen der Datenaufzeichnung markieren, um nachträglich die analysierten Daten evaluieren zu können?
 	\item Bluetooth funktioniert über eine Reichweite zwischen 5-10 Metern. Bei zu vielen Verbindungsabbrüchen muss mit dem Empfangsgeräte an der Anlage mitgelaufen werden, da die Wände der Anlage etwas zu abschirmend sind. Eventuell gibt es eine Möglichkeit mehrere BLE-Empfänger an der Anlage zu positionieren
 	\item Zum Schutz des Bauteils wurde die Kapsel in Polsterfolie eingepackt. Dadurch wurde das Bauteil langsamer durch die Anlage befördert als die Steine
 	\item Ein Akku mit 100 mAh hält länger als anfangs angenommen
@@ -17,9 +17,9 @@ Zwischen der App und dem Mikrocontroller kam es zu häufigen Verbindungsabbrüch
 
 \subsection{Erster Messlauf}
 
-Nach Optimierung der Android App konnten wieder Daten gemessen werden. Die Bluetooth-Verbindungsaufbau wurde verändert, sodass die Verbindung nun viel stabiler läuft. Pro Rundendurchgang wurde ein interner Zähler der App auf 0 gesetzt, um Runden im Datensatz identifizieren zu können. Zusätzlich wurde an immer gleichen Punkte in der Anlage die empfangen Daten zwischen gespeichert. Da damit eine neue Datei angelegt wurde, können auch einzelne Anlagenabschnitte ungefähr zugeordnet werden.
+Nach Optimierung der Android App konnten wieder Daten gemessen werden. Der Bluetooth-Verbindungsaufbau wurde überarbeitet, sodass die Verbindung nun viel stabiler läuft. Pro Rundendurchgang wurde ein interner Zähler der App auf zurückgesetzt, um Runden im Datensatz identifizieren zu können. Zusätzlich wurde an immer gleichen Punkten der Anlage die empfangen Daten zwischengespeichert: Übergänge von Rüttler auf Förderband und andersrum, Ausnahmen: Langes Förderband auf Querrüttler oben und ganz kurzer Rüttler bis Sortierband. Da damit eine neue Datei angelegt wurde, können auch einzelne Anlagenabschnitte innerhalb eines Messlaufs zugeordnet werden.
 
-Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt (Abbildung \ref{fig:k4_polsterfolie}). Da dadurch die Kapsel auf der Anlage langsamer als die Steine befördert wurde, wurden an die Verpackung noch drei Flügel, wie in Abbildung \ref{fig:k4_fluegel} zu sehen, angebracht. Dadurch sollen Steine die Kapsel besser mitnehmen können. Damit war die Kapsel ebenso schnell wie die Steine und lag auch auf den einzelnen Beförderungsmodulen sehr stabil (weniger Orientierungsänderungen). Zum Abschluss wurde die Kapsel ohne Verpackungsmaterial durch die Anlage geschickt (Abbildung \ref{fig:k4_kapsel}). Die Kapsel war hier ebenso schnell wie die Steine. Allerdings war hier zu beobachten, dass die Kapsel sich stark um die Längsachse drehte. 
+Die Kapsel wurde bei den ersten Messrunden in Polsterfolie eingepackt (Abbildung \ref{fig:k4_polsterfolie}). Da dadurch die Kapsel auf der Anlage langsamer als die Steine befördert wurde, wurden an die Verpackung noch drei Flügel, wie in Abbildung \ref{fig:k4_fluegel} zu sehen, angebracht. Dadurch sollen Steine die Kapsel besser mitnehmen können. Damit war die Kapsel ebenso schnell wie die Steine und lag auch auf den einzelnen Beförderungsmodulen sehr stabil, d.h. wenige Orientierungsänderungen. Zum Abschluss wurde die Kapsel ohne Verpackungsmaterial durch die Anlage geschickt (Abbildung \ref{fig:k4_kapsel}). Die Kapsel war hier ebenso schnell wie die Steine. Allerdings war hier zu beobachten, dass die Kapsel sich stark um die Längsachse drehte. 
 
 In den letzten Dateien kam es zu Testfehlern, in der keine aktuellen Daten vom Sensormodul mehr gesendet wurden.
 
@@ -71,8 +71,8 @@ In einem weiteren Messlauf wurde noch einmal die Auswirkungen der Form des instr
 	\end{minipage}
 \end{figure}
 
-Nach fünf Testrunden und der Kontrolle der gespeicherten Datendateien musste leider festgestellt werden, dass vom Mikrocontroller fehlerhafte Sensorwerte geliefert wurden. Beim Ausweichen auf ein anderes instrumentieten Schüttgutes musste zunächst ein Kabel verlötet werden, das abgebrochen war. Dies zeigte, dass die Mikrocontroller nicht sehr robust sind, allerdings auf der Anlage auch starken Vibrationen und Erschütterungen ausgesetzt sind.
+Nach fünf Testrunden und der Kontrolle der gespeicherten Datendateien musste leider festgestellt werden, dass vom Mikrocontroller fehlerhafte Sensorwerte geliefert wurden. Beim Ausweichen auf ein anderes instrumentietes Schüttgut musste zunächst ein Kabel verlötet werden, das abgebrochen war. Dies zeigt, dass die Mikrocontroller nicht sehr robust sind, allerdings auf der Anlage auch starken Vibrationen und Erschütterungen ausgesetzt sind.
 
-Nach einem Verbindungsaufbau mit der Android App war jedoch ein fehlerfreies Empfangen der Daten mit dem weiteren Mikrocontroller nicht möglich. Es kamen geringer getaktete Datentupels an, begleitet von vielen Bluetooth-Verbindungsabbrüchen. Eventuell beeinträchtigt ein Alurahmen die Bluetooth-Verbindung, weswegen man zukünftig auch noch weitere Materialien testen könnte. Widersprüchlich ist nur, dass der erste Mikrocontroller trotz des Rahmens senden konnte. Daraus ergibt sich auch die Notwendigkeit, vor Messbeginn Referenzmessungen mit jedem instrumentierten Schüttgut durchzuführen, um festzustellen, ob es unterschiedliche Verhalten bei den einzelnen Adafruit-Bauteilen gibt.
+Nach einem Verbindungsaufbau mit der Android App war jedoch ein fehlerfreies Empfangen der Daten mit dem weiteren Mikrocontroller nicht möglich. Es kamen geringer getaktete Datentupels an, begleitet von vielen Bluetooth-Verbindungsabbrüchen. Eventuell beeinträchtigt ein Alurahmen die Bluetooth-Verbindung, weswegen man zukünftig auch noch weitere Materialien testen sollte. Widersprüchlich ist nur, dass der erste Mikrocontroller trotz des Rahmens senden konnte. Daraus ergibt sich auch die Notwendigkeit, vor Messbeginn Referenzmessungen mit jedem verwendeten instrumentierten Schüttgut durchzuführen, um festzustellen, ob es unterschiedliche Verhalten bei den einzelnen Adafruit-Bauteilen gibt.
 
 Obwohl keine gemessenen Sensordaten zur Verfügung stehen, konnte beobachtet werden, dass der Alurahmen auf den Förderbändern sehr ruhig liegend befördert wurde. Auf den Rüttlermodulen jedoch drehte sich die Box auch und sprang teilweise sogar einige Zentimeter zurück. Auch das Oberflächenmaterial könnte eine wichtige Rolle spielen. Sowohl Variante 3 mit der unverpackten Kapsel und Variante 4 mit Duct Tape und Alurahmen haben eine sehr glatte Oberfläche, bei denen auch ein unruhiges Laufverhalten beobachtet werden konnte.
